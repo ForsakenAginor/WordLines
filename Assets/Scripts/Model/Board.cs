@@ -47,7 +47,7 @@ public class Board
         secondCell.Move(first - second);
     }
 
-    public void GetMatchedWord(Vector2 cell, out string bestWord, out IEnumerable<Cell> wordPosition)
+    public void GetMatchedWord(Vector2 cell, out string bestWord, out IEnumerable<Cell> wordCells)
     {
         string row = new string(GetCells().Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
         string column = new string(GetCells().Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
@@ -64,24 +64,28 @@ public class Board
             if (rowNoun.Length > columnNoun.Length)
             {
                 bestWord = rowNoun;
-                int wordLenght = bestWord.Length;
-                int startIndex = Mathf.Clamp((int)cell.x - wordLenght + 1, 0, row.Length);
-                int wordStartIndex = row.IndexOf(bestWord, startIndex);
-                wordPosition = GetCells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + wordLenght)).ToList();
+                int wordStartIndex = GetWordStartIndex((int)cell.x, row, rowNoun);
+                wordCells = GetCells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + rowNoun.Length)).ToList();
             }
             else
             {
                 bestWord = columnNoun;
-                int wordLenght = bestWord.Length;
-                int startIndex = Mathf.Clamp((int)cell.y - wordLenght + 1, 0, column.Length);
-                int wordStartIndex = column.IndexOf(bestWord, startIndex);
-                wordPosition = GetCells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + wordLenght)).ToList();
+                int wordStartIndex = GetWordStartIndex((int)cell.y, column, columnNoun);
+                wordCells = GetCells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + columnNoun.Length)).ToList();
             }
         }
         else
         {
-            wordPosition = new List<Cell>();
+            wordCells = new List<Cell>();
         }
+    }
+
+    private static int GetWordStartIndex(int position, string rawString, string subString)
+    {
+        int minStartIndex = position - subString.Length + 1; 
+        int startIndex = Mathf.Clamp(minStartIndex, 0, rawString.Length);
+
+        return rawString.IndexOf(subString, startIndex);
     }
 
     private void FixInitiallyMatches()
