@@ -65,6 +65,7 @@ public class BoardInitializer : MonoBehaviour
 
     private void DestroyCells(IEnumerable<Cell> cells)
     {
+        _board.RemoveCells(cells);
         IEnumerable<Vector2> positionsCellsForDeleting = cells.Select(o => new Vector2(o.XPosition, o.YPosition));
         List<CellMover> cellsForDeleting = new List<CellMover>();
 

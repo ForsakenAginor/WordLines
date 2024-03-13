@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Board
 {
-    private List<Cell> _cellsList = new List<Cell>();
+    private List<Cell> _cells = new List<Cell>();
     private MatchFinder _matchFinder;
     private Letters _letters;
 
@@ -17,30 +17,37 @@ public class Board
         for (int y = 0; y < BoardConfig.Height; y++)
         {
             for (int x = 0; x < BoardConfig.Width; x++)
-            {
-                char letter = letters.GetRandomLetter();
-                _cellsList.Add(new Cell(x, y, letter));
-            }
+                _cells.Add(new Cell(x, y, letters.GetRandomLetter()));
         }
+
         FixInitiallyMatches();
     }
 
-    public IEnumerable<Cell> GetCells() => _cellsList;
-    
-    public void RemoveCells(IEnumerable<Cell> cells)
-    {
+    public IEnumerable<Cell> GetCells() => _cells;
 
+    public void RemoveCells(IEnumerable<Cell> cellsForDeleting)
+    {
+        foreach(Cell cell in cellsForDeleting)
+        {
+            var dropdownCells = _cells.Where(o => o.YPosition < cell.YPosition);
+
+            foreach (Cell dropdownCell in dropdownCells)
+                dropdownCell.MoveDown();
+
+            _cells.Add(new Cell(cell.XPosition, 0, _letters.GetRandomLetter()));
+            _cells.Remove(cell);
+        }
     }
 
     public void SwapCells(Vector2 first, Vector2 second)
     {
-        Cell firstCell = _cellsList.Where(o => o.XPosition == first.x && o.YPosition == first.y).FirstOrDefault();
-        Cell secondCell = _cellsList.Where(o => o.XPosition == second.x && o.YPosition == second.y).FirstOrDefault();
+        Cell firstCell = _cells.Where(o => o.XPosition == first.x && o.YPosition == first.y).FirstOrDefault();
+        Cell secondCell = _cells.Where(o => o.XPosition == second.x && o.YPosition == second.y).FirstOrDefault();
         firstCell.Move(second - first);
         secondCell.Move(first - second);
     }
 
-    public void GetMatchedWord(Vector2 cell, out string bestWord, out IEnumerable<Cell> wordPosition )
+    public void GetMatchedWord(Vector2 cell, out string bestWord, out IEnumerable<Cell> wordPosition)
     {
         string row = new string(GetCells().Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
         string column = new string(GetCells().Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
@@ -51,19 +58,16 @@ public class Board
 
         if (_matchFinder.TryFind(row, (int)cell.x, out rowNoun) | _matchFinder.TryFind(column, (int)cell.y, out columnNoun))
         {
-            if(rowNoun == null)
-                rowNoun = string.Empty;
+            rowNoun = rowNoun == null ? string.Empty : rowNoun;
+            columnNoun = columnNoun == null ? string.Empty : columnNoun;
 
-            if(columnNoun == null)
-                columnNoun = string.Empty;
-
-            if( rowNoun.Length > columnNoun.Length)
+            if (rowNoun.Length > columnNoun.Length)
             {
                 bestWord = rowNoun;
                 int wordLenght = bestWord.Length;
                 int startIndex = Mathf.Clamp((int)cell.x - wordLenght + 1, 0, row.Length);
                 int wordStartIndex = row.IndexOf(bestWord, startIndex);
-                wordPosition = GetCells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + wordLenght));
+                wordPosition = GetCells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + wordLenght)).ToList();
             }
             else
             {
@@ -71,7 +75,7 @@ public class Board
                 int wordLenght = bestWord.Length;
                 int startIndex = Mathf.Clamp((int)cell.y - wordLenght + 1, 0, column.Length);
                 int wordStartIndex = column.IndexOf(bestWord, startIndex);
-                wordPosition = GetCells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + wordLenght));
+                wordPosition = GetCells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + wordLenght)).ToList();
             }
         }
         else
@@ -82,7 +86,7 @@ public class Board
 
     private void FixInitiallyMatches()
     {
-        foreach (Cell cell in _cellsList)
+        foreach (Cell cell in _cells)
         {
             bool hasMatch;
 
@@ -92,9 +96,9 @@ public class Board
                 string column = new string(GetCells().Where(o => o.XPosition == cell.XPosition).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
                 hasMatch = _matchFinder.TryFind(row, cell.XPosition, out _) || _matchFinder.TryFind(column, cell.YPosition, out _);
 
-                if (hasMatch)                
+                if (hasMatch)
                     cell.ChangeContent(_letters.GetRandomLetter());
-                
+
             } while (hasMatch);
         }
     }
