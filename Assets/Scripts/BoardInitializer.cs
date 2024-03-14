@@ -49,32 +49,21 @@ public class BoardInitializer : MonoBehaviour
     private void OnCellsSwapped(Vector2 first, Vector2 second)
     {
         _board.SwapCells(first, second);
-        IEnumerable<Cell> firstCells;
-        string firstWord;
-        _board.GetMatchedWord(first, out firstWord, out firstCells);
-        IEnumerable<Cell> secondCells;
-        string secondWord;
-        _board.GetMatchedWord(second, out secondWord, out secondCells);
+        _board.GetMatchedWord(first, out WordAtBoard firstWord);
+        _board.GetMatchedWord(second, out WordAtBoard secondWord);
 
-        if (string.IsNullOrEmpty(firstWord) && string.IsNullOrEmpty(secondWord))
+        if (firstWord == null && secondWord == null)
             return;
 
-        if (firstWord.Length > secondWord.Length)
-        {
-            DestroyCells(firstCells);
-            WordFound?.Invoke(firstWord);
-        }
-        else
-        {
-            DestroyCells(secondCells);
-            WordFound?.Invoke(secondWord);
-        }
+        WordAtBoard bestResult = firstWord.Word.Length > secondWord.Word.Length ? firstWord : secondWord;
+        DestroyCells(bestResult.WordPosition);
+        WordFound?.Invoke(bestResult.Word);
     }
 
     private void UpdateAffectedCells(IEnumerable<Cell> cells)
     {
         List<Cell> hz = new List<Cell>(cells);
-            hz = hz.OrderBy(o=>o.YPosition).ToList();
+        hz = hz.OrderBy(o => o.YPosition).ToList();
 
         foreach (Cell cell in hz)
         {

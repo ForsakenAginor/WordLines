@@ -54,16 +54,15 @@ public class Board
         secondCell.Move(first - second);
     }
 
-    public void GetMatchedWord(Vector2 cell, out string bestWord, out IEnumerable<Cell> wordCells)
+    public void GetMatchedWord(Vector2 cell, out WordAtBoard word)
     {
         string row = new string(Cells().Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
         string column = new string(Cells().Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
+        string bestWord = string.Empty;
+        List<Cell> wordPosition = new List<Cell>();
+        word = null;
 
-        bestWord = string.Empty;
-        string rowNoun = string.Empty;
-        string columnNoun = string.Empty;
-
-        if (_matchFinder.TryFind(row, (int)cell.x, out rowNoun) | _matchFinder.TryFind(column, (int)cell.y, out columnNoun))
+        if (_matchFinder.TryFind(row, (int)cell.x, out string rowNoun) | _matchFinder.TryFind(column, (int)cell.y, out string columnNoun))
         {
             rowNoun = rowNoun == null ? string.Empty : rowNoun;
             columnNoun = columnNoun == null ? string.Empty : columnNoun;
@@ -72,18 +71,16 @@ public class Board
             {
                 bestWord = rowNoun;
                 int wordStartIndex = GetWordStartIndex((int)cell.x, row, rowNoun);
-                wordCells = Cells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + rowNoun.Length)).ToList();
+                wordPosition = Cells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + rowNoun.Length)).ToList();
             }
             else
             {
                 bestWord = columnNoun;
                 int wordStartIndex = GetWordStartIndex((int)cell.y, column, columnNoun);
-                wordCells = Cells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + columnNoun.Length)).ToList();
+                wordPosition = Cells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + columnNoun.Length)).ToList();
             }
-        }
-        else
-        {
-            wordCells = new List<Cell>();
+
+            word = new WordAtBoard(bestWord, wordPosition);
         }
     }
 
