@@ -51,11 +51,19 @@ public class BoardInitializer : MonoBehaviour
         _board.SwapCells(first, second);
         _board.GetMatchedWord(first, out WordAtBoard firstWord);
         _board.GetMatchedWord(second, out WordAtBoard secondWord);
+        WordAtBoard bestResult;
 
         if (firstWord == null && secondWord == null)
             return;
+        else if (firstWord == null)
+            bestResult = secondWord;
+        else if (secondWord == null)
+            bestResult = firstWord;
+        else if (firstWord.Word.Length > secondWord.Word.Length)
+            bestResult = firstWord;
+        else
+            bestResult = secondWord;
 
-        WordAtBoard bestResult = firstWord.Word.Length > secondWord.Word.Length ? firstWord : secondWord;
         DestroyCells(bestResult.WordPosition);
         WordFound?.Invoke(bestResult.Word);
     }
