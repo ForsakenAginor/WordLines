@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,8 @@ public class BoardInitializer : MonoBehaviour
     private List<CellMover> _cells = new List<CellMover>();
     private Board _board;
 
+    public event Action<string> WordFound;
+
     private void Awake()
     {
         Letters letters = new Letters();
@@ -24,7 +26,7 @@ public class BoardInitializer : MonoBehaviour
 
     private void Init()
     {
-        foreach (var cell in _board.GetCells())
+        foreach (var cell in _board.Cells())
         {
             CellMover cellMover = Instantiate(_cellPrefab, transform);
             cellMover.Init(cell, transform);
@@ -58,15 +60,36 @@ public class BoardInitializer : MonoBehaviour
             return;
 
         if (firstWord.Length > secondWord.Length)
+        {
             DestroyCells(firstCells);
+            WordFound?.Invoke(firstWord);
+        }
         else
+        {
             DestroyCells(secondCells);
+            WordFound?.Invoke(secondWord);
+        }
+    }
+
+    private void UpdateAffectedCells(IEnumerable<Cell> cells)
+    {
+        List<Cell> hz = new List<Cell>(cells);
+            hz = hz.OrderBy(o=>o.YPosition).ToList();
+
+        foreach (Cell cell in hz)
+        {
+            var dropdownCells = _cells.Where(o => o.CellPosition.y < cell.YPosition && o.CellPosition.x == cell.XPosition).OrderBy(o => o.CellPosition.y).ToList();
+
+            foreach (CellMover cellMover in dropdownCells)
+                cellMover.SetCellPosition(cellMover.CellPosition - Vector2.down, 1);
+        }
+
     }
 
     private void DestroyCells(IEnumerable<Cell> cells)
     {
-        _board.RemoveCells(cells);
-        IEnumerable<Vector2> positionsCellsForDeleting = cells.Select(o => new Vector2(o.XPosition, o.YPosition));
+        List<Cell> newCells = _board.ReplaceCells(cells).ToList();
+        IEnumerable<Vector2> positionsCellsForDeleting = cells.Select(o => new Vector2(o.XPosition, o.YPosition)).ToList();
         List<CellMover> cellsForDeleting = new List<CellMover>();
 
         foreach (var cell in _cells)
@@ -75,10 +98,9 @@ public class BoardInitializer : MonoBehaviour
                 cellsForDeleting.Add(cell);
         }
 
+        UpdateAffectedCells(cells);
+
         for (int i = 0; i < cellsForDeleting.Count(); i++)
-        {
-            _cells.Remove(cellsForDeleting[i]);
-            Destroy(cellsForDeleting[i].gameObject);
-        }
+            cellsForDeleting[i].Init(newCells[i], transform);
     }
 }

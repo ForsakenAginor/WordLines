@@ -23,20 +23,27 @@ public class Board
         FixInitiallyMatches();
     }
 
-    public IEnumerable<Cell> GetCells() => _cells;
+    public IEnumerable<Cell> Cells() => _cells;
 
-    public void RemoveCells(IEnumerable<Cell> cellsForDeleting)
+    public IEnumerable<Cell> ReplaceCells(IEnumerable<Cell> cellsForDeleting)
     {
-        foreach(Cell cell in cellsForDeleting)
+        cellsForDeleting = cellsForDeleting.OrderBy(o => o.YPosition);
+        List<Cell> newCells = new List<Cell>();
+
+        foreach (Cell cell in cellsForDeleting)
         {
-            var dropdownCells = _cells.Where(o => o.YPosition < cell.YPosition);
+            var dropdownCells = _cells.Where(o => o.YPosition < cell.YPosition && o.XPosition == cell.XPosition).ToList();
 
             foreach (Cell dropdownCell in dropdownCells)
                 dropdownCell.MoveDown();
 
-            _cells.Add(new Cell(cell.XPosition, 0, _letters.GetRandomLetter()));
+            Cell newCell = new Cell(cell.XPosition, 0, _letters.GetRandomLetter());
+            _cells.Add(newCell);
+            newCells.Add(newCell);
             _cells.Remove(cell);
         }
+
+        return newCells;
     }
 
     public void SwapCells(Vector2 first, Vector2 second)
@@ -49,8 +56,8 @@ public class Board
 
     public void GetMatchedWord(Vector2 cell, out string bestWord, out IEnumerable<Cell> wordCells)
     {
-        string row = new string(GetCells().Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
-        string column = new string(GetCells().Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
+        string row = new string(Cells().Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
+        string column = new string(Cells().Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
 
         bestWord = string.Empty;
         string rowNoun = string.Empty;
@@ -65,13 +72,13 @@ public class Board
             {
                 bestWord = rowNoun;
                 int wordStartIndex = GetWordStartIndex((int)cell.x, row, rowNoun);
-                wordCells = GetCells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + rowNoun.Length)).ToList();
+                wordCells = Cells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + rowNoun.Length)).ToList();
             }
             else
             {
                 bestWord = columnNoun;
                 int wordStartIndex = GetWordStartIndex((int)cell.y, column, columnNoun);
-                wordCells = GetCells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + columnNoun.Length)).ToList();
+                wordCells = Cells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + columnNoun.Length)).ToList();
             }
         }
         else
@@ -82,7 +89,7 @@ public class Board
 
     private static int GetWordStartIndex(int position, string rawString, string subString)
     {
-        int minStartIndex = position - subString.Length + 1; 
+        int minStartIndex = position - subString.Length + 1;
         int startIndex = Mathf.Clamp(minStartIndex, 0, rawString.Length);
 
         return rawString.IndexOf(subString, startIndex);
@@ -96,8 +103,8 @@ public class Board
 
             do
             {
-                string row = new string(GetCells().Where(o => o.YPosition == cell.YPosition).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
-                string column = new string(GetCells().Where(o => o.XPosition == cell.XPosition).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
+                string row = new string(Cells().Where(o => o.YPosition == cell.YPosition).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
+                string column = new string(Cells().Where(o => o.XPosition == cell.XPosition).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
                 hasMatch = _matchFinder.TryFind(row, cell.XPosition, out _) || _matchFinder.TryFind(column, cell.YPosition, out _);
 
                 if (hasMatch)

@@ -24,7 +24,12 @@ public class Cell
 
     public void MoveDown()
     {
-        _yPosition--;
+        _yPosition++;
+    }
+
+    public void MoveToTop()
+    {
+        _yPosition = 0;
     }
 
     public void Move(Vector2 direction)
