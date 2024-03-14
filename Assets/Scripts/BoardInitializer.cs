@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BoardInitializer : MonoBehaviour
 {
@@ -49,23 +46,32 @@ public class BoardInitializer : MonoBehaviour
     private void OnCellsSwapped(Vector2 first, Vector2 second)
     {
         _board.SwapCells(first, second);
-        _board.GetMatchedWord(first, out WordAtBoard firstWord);
-        _board.GetMatchedWord(second, out WordAtBoard secondWord);
-        WordAtBoard bestResult;
+        StartScanCycle(new Vector2[] { first, second });
+    }
 
-        if (firstWord == null && secondWord == null)
+    private void StartScanCycle(Vector2[] cells)
+    {
+        WordAtBoard bestResult = FindWord(cells);
+
+        if (bestResult == null)
             return;
-        else if (firstWord == null)
-            bestResult = secondWord;
-        else if (secondWord == null)
-            bestResult = firstWord;
-        else if (firstWord.Word.Length > secondWord.Word.Length)
-            bestResult = firstWord;
-        else
-            bestResult = secondWord;
 
         DestroyCells(bestResult.WordPosition);
         WordFound?.Invoke(bestResult.Word);
+        StartScanCycle( _cells.Select(o => o.CellPosition).ToArray());
+    }
+
+    private WordAtBoard FindWord(Vector2[] cells)
+    {
+        List<WordAtBoard> words = new List<WordAtBoard>();
+
+        foreach (var cell in cells)
+        {
+            _board.GetMatchedWord(cell, out WordAtBoard word);
+            words.Add(word);
+        }
+
+        return words.Where( o => o != null).OrderByDescending(o => o.Word.Length).FirstOrDefault();
     }
 
     private void UpdateAffectedCells(IEnumerable<Cell> cells)
@@ -80,7 +86,6 @@ public class BoardInitializer : MonoBehaviour
             foreach (CellMover cellMover in dropdownCells)
                 cellMover.SetCellPosition(cellMover.CellPosition - Vector2.down, 1);
         }
-
     }
 
     private void DestroyCells(IEnumerable<Cell> cells)
