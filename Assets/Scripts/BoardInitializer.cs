@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -51,27 +52,33 @@ public class BoardInitializer : MonoBehaviour
 
     private void StartScanCycle(Vector2[] cells)
     {
-        WordAtBoard bestResult = FindWord(cells);
+        WordAtBoard bestResult = _board.FindWord(cells);
 
         if (bestResult == null)
             return;
 
         DestroyCells(bestResult.WordPosition);
         WordFound?.Invoke(bestResult.Word);
-        StartScanCycle( _cells.Select(o => o.CellPosition).ToArray());
+        StartCoroutine(ScanBoard());
     }
 
-    private WordAtBoard FindWord(Vector2[] cells)
+    private IEnumerator ScanBoard()
     {
-        List<WordAtBoard> words = new List<WordAtBoard>();
+        float delaySeconds = 1;
+        WaitForSeconds delay = new WaitForSeconds(delaySeconds);
+        Vector2[] cells = _cells.Select(o => o.CellPosition).ToArray();
 
-        foreach (var cell in cells)
+        while (true)
         {
-            _board.GetMatchedWord(cell, out WordAtBoard word);
-            words.Add(word);
-        }
+            WordAtBoard bestResult = _board.FindWord(cells);
 
-        return words.Where( o => o != null).OrderByDescending(o => o.Word.Length).FirstOrDefault();
+            if (bestResult == null)
+                yield break;
+
+            DestroyCells(bestResult.WordPosition);
+            WordFound?.Invoke(bestResult.Word);
+            yield return delay;
+        }
     }
 
     private void UpdateAffectedCells(IEnumerable<Cell> cells)

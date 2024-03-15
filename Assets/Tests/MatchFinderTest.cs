@@ -10,6 +10,18 @@ using UnityEngine.TestTools;
 
 public class MatchFinderTest
 {
+    [Test]
+    public void Test()
+    {
+        NounDictionary nouns = new NounDictionary();
+        MatchFinder finder = new MatchFinder(nouns.Nouns.Keys);
+        string letters = "КЛДАПИАЛ";
+        int index = 4;
+        string result;
+        bool isFound = finder.TryFind(letters, index, out result);
+
+        Assert.IsTrue(isFound);
+    }
     /*
     [Test]
     public void ConstructorTest()

@@ -10,7 +10,6 @@ public class Letters
         {'Г', 3 },
         {'Д', 3 },
         {'Е', 1 },
-        {'Ё', 5 },
         {'Ж', 5 },
         {'З', 5 },
         {'И', 1 },
@@ -51,6 +50,11 @@ public class Letters
     public static int GetLetterValue(char letter)
     {
         return _letterValuePairs[letter];
+    }
+
+    public static IEnumerable<char> GetAlfabet()
+    {
+        return _letterValuePairs.Keys;
     }
 
     public char GetRandomLetter()

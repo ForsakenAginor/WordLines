@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Board
@@ -54,7 +55,68 @@ public class Board
         secondCell.Move(first - second);
     }
 
-    public void GetMatchedWord(Vector2 cell, out WordAtBoard word)
+    public WordAtBoard HZ(Vector2[] cells)
+    {
+        List<WordAtBoard> results = new List<WordAtBoard>();
+
+        if (cells.Length == 2)
+        {
+            int size = cells.Length / 2;
+            Vector2[] firstHalf = cells.ToList().Take(size).ToArray();
+            Vector2[] secondHalf = cells.ToList().Skip(size).ToArray();
+
+            Task<WordAtBoard> scanTask1 = new Task<WordAtBoard>(() => FindWord(firstHalf));
+            Task<WordAtBoard> scanTask2 = new Task<WordAtBoard>(() => FindWord(secondHalf));
+            scanTask1.Start();
+            scanTask2.Start();
+            scanTask1.Wait();
+            scanTask2.Wait();
+            results.Add(scanTask1.Result);
+            results.Add(scanTask2.Result);
+        }
+        else
+        {
+            int size = cells.Length / 4;
+            Vector2[] first = cells.ToList().Take(size).ToArray();
+            Vector2[] second = cells.ToList().Skip(size).Take(size).ToArray();
+            Vector2[] third = cells.ToList().Skip(size).Skip(size).Take(size).ToArray();
+            Vector2[] fourth = cells.ToList().Skip(size).Skip(size).Skip(size).ToArray();
+
+            Task<WordAtBoard> scanTask1 = new Task<WordAtBoard>(() => FindWord(first));
+            Task<WordAtBoard> scanTask2 = new Task<WordAtBoard>(() => FindWord(second));
+            Task<WordAtBoard> scanTask3 = new Task<WordAtBoard>(() => FindWord(third));
+            Task<WordAtBoard> scanTask4 = new Task<WordAtBoard>(() => FindWord(fourth));
+            scanTask1.Start();
+            scanTask2.Start();
+            scanTask3.Start();
+            scanTask4.Start();
+            scanTask1.Wait();
+            scanTask2.Wait();
+            scanTask3.Wait();
+            scanTask4.Wait();
+            results.Add(scanTask1.Result);
+            results.Add(scanTask2.Result);
+            results.Add(scanTask3.Result);
+            results.Add(scanTask4.Result);
+        }
+
+        return results.Where(o => o != null).OrderByDescending(o => o.Word.Length).FirstOrDefault();
+    }
+
+    public WordAtBoard FindWord(Vector2[] cells)
+    {
+        List<WordAtBoard> words = new List<WordAtBoard>();
+
+        foreach (var cell in cells)
+        {
+            GetMatchedWord(cell, out WordAtBoard word);
+            words.Add(word);
+        }
+
+        return words.Where(o => o != null).OrderByDescending(o => o.Word.Length).FirstOrDefault();
+    }
+
+    private void GetMatchedWord(Vector2 cell, out WordAtBoard word)
     {
         string row = new string(Cells().Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
         string column = new string(Cells().Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
