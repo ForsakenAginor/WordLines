@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,14 @@ public class NounDictionary
 
     public IReadOnlyDictionary<string, string> Nouns => _nouns;
 
+    public void RemoveWord(string word)
+    {
+        if(_nouns.ContainsKey(word) == false)
+            throw new ArgumentOutOfRangeException(nameof(word));
+
+        _nouns.Remove(word);
+    }
+
     private void Fill()
     {
         const string StringSeparator = "\n";
@@ -36,7 +45,7 @@ public class NounDictionary
         }
     }
     
-    public void FilterBySize(int maxSize)
+    private void FilterBySize(int maxSize)
     {
         var tempList = _nouns.Keys.ToList();
 

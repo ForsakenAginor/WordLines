@@ -1,0 +1,58 @@
+using TMPro;
+using UnityEngine;
+using DG.Tweening;
+using System;
+
+public class Timer : MonoBehaviour
+{
+    [SerializeField] private TMP_Text _text;
+    [SerializeField] private Color _attentionColor;
+    [SerializeField] private float _roundTime = 240;
+
+    private float _remainingSeconds;
+    private float _pulseStartTime = 60f;
+    private float _changeColorTime = 15f;
+    private Tweener _tweener;
+    private Color _commonColor;
+
+    public event Action TimeEnded;
+
+    private void OnValidate()
+    {
+        float minimumRoundTime = 1f;
+        _roundTime = _roundTime <= 0 ? minimumRoundTime : _roundTime;
+    }
+
+    private void Awake()
+    {
+        _remainingSeconds = _roundTime;
+        _commonColor = _text.color;
+    }
+
+    private void Update()
+    {
+        _remainingSeconds -= Time.deltaTime;
+        _text.text = _remainingSeconds.ToString("0");
+
+        if( _remainingSeconds < _pulseStartTime && _tweener == null)
+        {
+            float pulseFrequency = 1f;
+            float pulseAmplitude = 1.1f;
+            int infinityLoop = -1;
+            _tweener = transform.DOScale(pulseAmplitude, pulseFrequency).SetLoops(infinityLoop, LoopType.Yoyo).SetEase(Ease.Linear);
+        }
+
+        if(_remainingSeconds < _changeColorTime && _text.color != _attentionColor)        
+            _text.color = _attentionColor;
+
+        if (_remainingSeconds <= 0)
+            TimeEnded?.Invoke();
+    }
+
+    public void Restart()
+    {
+        _tweener = null;
+        _text.color = _commonColor;
+        _remainingSeconds = _roundTime;
+    }
+}

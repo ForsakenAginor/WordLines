@@ -30,7 +30,7 @@ public class NounsDictionaryTests
         int maxSize = BoardConfig.Width > BoardConfig.Height ? BoardConfig.Width : BoardConfig.Height;
         string longNoun = nouns.Nouns.Keys.Where(o => o.Length > maxSize).First();
         string normaLengthNoun = nouns.Nouns.Keys.Where(o => o.Length == maxSize).First();
-        nouns.FilterBySize(maxSize);
+        //nouns.FilterBySize(maxSize);
 
         Assert.False(nouns.Nouns.ContainsKey(longNoun));
         Assert.True(nouns.Nouns.ContainsKey(normaLengthNoun));

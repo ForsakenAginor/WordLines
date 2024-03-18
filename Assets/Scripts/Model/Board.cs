@@ -24,7 +24,7 @@ public class Board
         FixInitiallyMatches();
     }
 
-    public IEnumerable<Cell> Cells() => _cells;
+    public IEnumerable<Cell> Cells => _cells;
 
     public IEnumerable<Cell> ReplaceCells(IEnumerable<Cell> cellsForDeleting)
     {
@@ -118,8 +118,8 @@ public class Board
 
     private void GetMatchedWord(Vector2 cell, out WordAtBoard word)
     {
-        string row = new string(Cells().Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
-        string column = new string(Cells().Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
+        string row = new string(Cells.Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
+        string column = new string(Cells.Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
         string bestWord = string.Empty;
         List<Cell> wordPosition = new List<Cell>();
         word = null;
@@ -133,13 +133,13 @@ public class Board
             {
                 bestWord = rowNoun;
                 int wordStartIndex = GetWordStartIndex((int)cell.x, row, rowNoun);
-                wordPosition = Cells().Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + rowNoun.Length)).ToList();
+                wordPosition = Cells.Where(o => o.YPosition == cell.y && o.XPosition >= wordStartIndex && o.XPosition < (wordStartIndex + rowNoun.Length)).ToList();
             }
             else
             {
                 bestWord = columnNoun;
                 int wordStartIndex = GetWordStartIndex((int)cell.y, column, columnNoun);
-                wordPosition = Cells().Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + columnNoun.Length)).ToList();
+                wordPosition = Cells.Where(o => o.XPosition == cell.x && o.YPosition >= wordStartIndex && o.YPosition < (wordStartIndex + columnNoun.Length)).ToList();
             }
 
             word = new WordAtBoard(bestWord, wordPosition);
@@ -162,8 +162,8 @@ public class Board
 
             do
             {
-                string row = new string(Cells().Where(o => o.YPosition == cell.YPosition).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
-                string column = new string(Cells().Where(o => o.XPosition == cell.XPosition).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
+                string row = new string(Cells.Where(o => o.YPosition == cell.YPosition).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
+                string column = new string(Cells.Where(o => o.XPosition == cell.XPosition).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
                 hasMatch = _matchFinder.TryFind(row, cell.XPosition, out _) || _matchFinder.TryFind(column, cell.YPosition, out _);
 
                 if (hasMatch)
