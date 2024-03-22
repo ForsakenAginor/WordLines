@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 public class WordAtBoard
 {
-    private string _word;
-    private List<Cell> _wordPosition;
+    private readonly string _word;
+    private readonly List<Cell> _wordPosition;
 
     public WordAtBoard(string bestWord, List<Cell> wordPosition)
     {

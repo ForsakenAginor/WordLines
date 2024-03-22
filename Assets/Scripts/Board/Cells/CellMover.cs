@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using UnityEngine.UIElements;
 
 public class CellMover : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    private const int LeftBorder = (BoardConfig.CellSize - BoardConfig.Width * BoardConfig.CellSize) / 2;
-    private const int TopBorder = (BoardConfig.Height * BoardConfig.CellSize - BoardConfig.CellSize) / 2;
+    private const int LeftBorder = (CellConfig.CellSize - BoardConfig.Width * CellConfig.CellSize) / 2;
+    private const int TopBorder = (BoardConfig.Height * CellConfig.CellSize - CellConfig.CellSize) / 2;
 
     private Vector2 _cellPosition;
     private Transform _draggingCanvas;
@@ -27,9 +25,10 @@ public class CellMover : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         CellView view = GetComponent<CellView>();
         view.Init(cell.Content);
         SetParent(parent);
-        transform.localPosition = new Vector3(LeftBorder + cell.XPosition * BoardConfig.CellSize, TopBorder );
+        transform.localPosition = new Vector3(LeftBorder + cell.XPosition * CellConfig.CellSize, TopBorder );
         _tweener = transform.DOLocalMove(transform.position, 0).SetEase(Ease.Linear).SetAutoKill(false);
-        SetCellPosition(new Vector2(cell.XPosition, cell.YPosition), 1);
+        float moveDuration = 1f;
+        SetCellPosition(new Vector2(cell.XPosition, cell.YPosition), moveDuration);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -44,6 +43,7 @@ public class CellMover : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        float swapTime = 0.5f;
         var result = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, result);
         var cellViewes = result.Where(o => o.gameObject != gameObject && o.gameObject.TryGetComponent<CellView>(out _));
@@ -56,15 +56,15 @@ public class CellMover : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
             {
                 transform.SetParent(_parent);
                 Vector2 tempVector = _cellPosition;
-                SetCellPosition(target.CellPosition, 0.5f);
-                target.SetCellPosition(tempVector, 0.5f);
+                SetCellPosition(target.CellPosition, swapTime);
+                target.SetCellPosition(tempVector, swapTime);
                 CellsSwapped?.Invoke(target.CellPosition, CellPosition);
                 return;
             }
         }
 
         transform.SetParent(_parent);
-        SetCellPosition(_cellPosition, 0.2f);
+        SetCellPosition(_cellPosition, swapTime);
     }
 
     public void SetParent(Transform parent)
@@ -75,7 +75,7 @@ public class CellMover : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
     public void SetCellPosition(Vector2 position, float duration)
     {
         _cellPosition = position;
-        _tweener.ChangeValues(transform.localPosition, new Vector3(LeftBorder + position.x * BoardConfig.CellSize, TopBorder - position.y * BoardConfig.CellSize), duration).Restart();
+        _tweener.ChangeValues(transform.localPosition, new Vector3(LeftBorder + position.x * CellConfig.CellSize, TopBorder - position.y * CellConfig.CellSize), duration).Restart();
         gameObject.name = $"Cell ({position.x}, {position.y})";
     }
 

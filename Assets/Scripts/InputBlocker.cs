@@ -6,11 +6,11 @@ public class InputBlocker : MonoBehaviour
 {
     [SerializeField] private GraphicRaycaster _graphicRaycaster;
 
-    private BoardInitializer _board;
+    private BoardManager _board;
 
-    public void Init(BoardInitializer board)
+    public void Init(BoardManager board)
     {
-        _board = board ?? throw new ArgumentNullException(nameof(board));
+        _board = board != null ? board : throw new ArgumentNullException(nameof(board));
         OnEnable();
     }
 

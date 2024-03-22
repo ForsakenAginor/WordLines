@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,8 +8,8 @@ public class NounDictionary
 {
     private const string FileName = "nouns.txt";
 
-    private string _fileContent;
-    private Dictionary<string, string> _nouns = new Dictionary<string, string>();
+    private readonly string _fileContent;
+    private readonly Dictionary<string, string> _nouns = new();
     
     public NounDictionary()
     {
@@ -20,6 +19,8 @@ public class NounDictionary
         FilterBySize(BoardConfig.Width > BoardConfig.Height ? BoardConfig.Width : BoardConfig.Height);
     }
 
+    public event Action WordRemoved;
+
     public IReadOnlyDictionary<string, string> Nouns => _nouns;
 
     public void RemoveWord(string word)
@@ -28,6 +29,7 @@ public class NounDictionary
             throw new ArgumentOutOfRangeException(nameof(word));
 
         _nouns.Remove(word);
+        WordRemoved?.Invoke();
     }
 
     private void Fill()

@@ -6,7 +6,7 @@ public class NounsList : MonoBehaviour
     [SerializeField] private Transform _contentHolder;
     [SerializeField] private Record _prefab;
 
-    private List<Transform> _words = new List<Transform>();
+    private readonly List<Transform> _words = new();
 
     public void Restart()
     {

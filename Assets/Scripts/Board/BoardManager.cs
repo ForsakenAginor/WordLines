@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BoardInitializer : MonoBehaviour
+public class BoardManager : MonoBehaviour
 {
     private CellMover _cellPrefab;
     private List<CellMover> _cells;
     private Board _board;
     private int _comboMultiplier = 1;
 
-    public event Action<string, int> WordFound;
+    public event Action<string, int, Vector3> WordFound;
     public event Action ChainScanStarted;
     public event Action ChainScanFinished;
 
@@ -28,7 +28,7 @@ public class BoardInitializer : MonoBehaviour
 
         _cells = new List<CellMover>();
         _cellPrefab = cellPrefab;
-        MatchFinder finder = new MatchFinder(nouns.Nouns.Keys);
+        MatchFinder finder = new(nouns);
         _board = new Board(letters, finder);
 
         foreach (var cell in _board.Cells)
@@ -39,24 +39,6 @@ public class BoardInitializer : MonoBehaviour
         }
 
         OnEnable();
-    }
-
-    public void ResetBoard(Letters letters, NounDictionary nouns)
-    {
-        if (letters == null)
-            throw new ArgumentNullException(nameof(letters));
-
-        if (nouns == null)
-            throw new ArgumentNullException(nameof(nouns));
-
-        if (_cells == null)
-            throw new Exception();
-
-        MatchFinder finder = new MatchFinder(nouns.Nouns.Keys);
-        _board = new Board(letters, finder);
-
-        for (int i = 0; i < _cells.Count; i++)
-            _cells[i].Init(_board.Cells.ToList()[i], transform);
     }
 
     private void OnEnable()
@@ -71,6 +53,24 @@ public class BoardInitializer : MonoBehaviour
             _cells[i].CellsSwapped -= OnCellsSwapped;
     }
 
+    public void ResetBoard(Letters letters, NounDictionary nouns)
+    {
+        if (letters == null)
+            throw new ArgumentNullException(nameof(letters));
+
+        if (nouns == null)
+            throw new ArgumentNullException(nameof(nouns));
+
+        if (_cells == null)
+            throw new Exception();
+
+        MatchFinder finder = new(nouns);
+        _board = new Board(letters, finder);
+
+        for (int i = 0; i < _cells.Count; i++)
+            _cells[i].Init(_board.Cells.ToList()[i], transform);
+    }
+
     private void OnCellsSwapped(Vector2 first, Vector2 second)
     {
         _board.SwapCells(first, second);
@@ -79,15 +79,14 @@ public class BoardInitializer : MonoBehaviour
 
     private void StartScanCycle(Vector2[] cells)
     {
-        WordAtBoard bestResult = _board.HZ(cells);
+        WordAtBoard bestResult = _board.FindWordMultiThreading(cells);
 
         if (bestResult == null)
             return;
 
         ChainScanStarted?.Invoke();
-        WordFound?.Invoke(bestResult.Word, _comboMultiplier);
+        DestroyCells(bestResult);
         _comboMultiplier++;
-        DestroyCells(bestResult.WordPosition);
         StartCoroutine(ScanBoard());
     }
 
@@ -95,12 +94,12 @@ public class BoardInitializer : MonoBehaviour
     {
         float delaySeconds = 1;
         int standardComboMultiplier = 1;
-        WaitForSeconds delay = new WaitForSeconds(delaySeconds);
+        WaitForSeconds delay = new(delaySeconds);
         Vector2[] cells = _cells.Select(o => o.CellPosition).ToArray();
 
         while (true)
         {
-            WordAtBoard bestResult = _board.HZ(cells);
+            WordAtBoard bestResult = _board.FindWordMultiThreading(cells);
 
             if (bestResult == null)
             {
@@ -109,8 +108,7 @@ public class BoardInitializer : MonoBehaviour
                 yield break;
             }
 
-            DestroyCells(bestResult.WordPosition);
-            WordFound?.Invoke(bestResult.Word, _comboMultiplier);
+            DestroyCells(bestResult);
             _comboMultiplier++;
             yield return delay;
         }
@@ -118,23 +116,25 @@ public class BoardInitializer : MonoBehaviour
 
     private void UpdateAffectedCells(IEnumerable<Cell> cells)
     {
-        List<Cell> hz = new List<Cell>(cells);
-        hz = hz.OrderBy(o => o.YPosition).ToList();
+        List<Cell> sortedCells = new(cells);
+        sortedCells = sortedCells.OrderBy(o => o.YPosition).ToList();
 
-        foreach (Cell cell in hz)
+        foreach (Cell cell in sortedCells)
         {
             var dropdownCells = _cells.Where(o => o.CellPosition.y < cell.YPosition && o.CellPosition.x == cell.XPosition).OrderBy(o => o.CellPosition.y).ToList();
+            float moveDuration = 1f;
 
             foreach (CellMover cellMover in dropdownCells)
-                cellMover.SetCellPosition(cellMover.CellPosition - Vector2.down, 1);
+                cellMover.SetCellPosition(cellMover.CellPosition - Vector2.down, moveDuration);
         }
     }
 
-    private void DestroyCells(IEnumerable<Cell> cells)
+    private void DestroyCells(WordAtBoard word)
     {
+        IEnumerable<Cell> cells = word.WordPosition;
         List<Cell> newCells = _board.ReplaceCells(cells).ToList();
         IEnumerable<Vector2> positionsCellsForDeleting = cells.Select(o => new Vector2(o.XPosition, o.YPosition)).ToList();
-        List<CellMover> cellsForDeleting = new List<CellMover>();
+        List<CellMover> cellsForDeleting = new();
 
         foreach (var cell in _cells)
         {
@@ -142,6 +142,8 @@ public class BoardInitializer : MonoBehaviour
                 cellsForDeleting.Add(cell);
         }
 
+        Vector3 position = cellsForDeleting.First().transform.localPosition;
+        WordFound?.Invoke(word.Word, _comboMultiplier, position);
         UpdateAffectedCells(cells);
 
         for (int i = 0; i < cellsForDeleting.Count(); i++)

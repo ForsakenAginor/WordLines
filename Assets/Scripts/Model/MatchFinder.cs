@@ -1,16 +1,20 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class MatchFinder
 {
-    private IEnumerable<string> _nouns;
+    private readonly IEnumerable<string> _nouns;
+    private readonly Dictionary<int, IEnumerable<string>> _sortedNouns = new();
 
-    public MatchFinder(IEnumerable<string> nouns)
+    public MatchFinder(NounDictionary dictionary)
     {
-        _nouns = nouns ?? throw new ArgumentNullException(nameof(nouns));
+        if (dictionary == null)
+            throw new ArgumentNullException(nameof(dictionary));
+
+        _nouns = dictionary.Nouns.Keys;
+        dictionary.WordRemoved += OnWordRemoved;
+        SortNounsBySize();
     }
 
     public bool TryFind(string letters, int index, out string bestResult)
@@ -19,14 +23,41 @@ public class MatchFinder
             throw new ArgumentOutOfRangeException(nameof(letters));
 
         List<string> wordsToSearch = CreatePseudoWords(letters, index);
-        bestResult = wordsToSearch.Intersect(_nouns).OrderByDescending(o => o.Length).FirstOrDefault();
+        List<string> nouns = new();
+
+        for(int i = 0; i < wordsToSearch.Count; i++)
+        {
+            if (_sortedNouns[wordsToSearch[i].Length].Contains(wordsToSearch[i]))
+                nouns.Add(wordsToSearch[i]);
+        }
+
+        bestResult = nouns.OrderByDescending(o => o.Length).FirstOrDefault();
 
         return bestResult != null;
     }
 
+
+    public void SortNounsBySize()
+    {
+        _sortedNouns.Clear();
+        int boardSize = BoardConfig.Width > BoardConfig.Height ? BoardConfig.Width : BoardConfig.Height;
+
+        for (int i = 2; i <= boardSize; i++)
+        {
+            IEnumerable<string> nouns = _nouns.Where(o => o.Length == i).ToList();
+            _sortedNouns.Add(i, nouns);
+        }
+    }
+
+    private void OnWordRemoved()
+    {
+        SortNounsBySize();
+    }
+
+
     private List<string> CreatePseudoWords(string letters, int index)
     {
-        List<string> results = new List<string>();
+        List<string> results = new();
         string result;
         int lastIndex = letters.Length - 1;
 

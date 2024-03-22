@@ -17,17 +17,12 @@ public class Score : MonoBehaviour
         }
     }
 
-    public void Restart()
-    {
-        Value = 0;
-    }
-
-    public void SetScore(string word, int combo)
+    public static int CalcScore(string word, int combo)
     {
         if (string.IsNullOrEmpty(word))
             throw new ArgumentException(nameof(word));
 
-        if(combo <= 0)
+        if (combo <= 0)
             throw new ArgumentOutOfRangeException(nameof(combo));
 
         int wordValue = 0;
@@ -36,6 +31,16 @@ public class Score : MonoBehaviour
             wordValue += Letters.GetLetterValue(word[i]);
 
         wordValue *= word.Length * combo;
-        Value += wordValue;
+        return wordValue;
+    }
+
+    public void Restart()
+    {
+        Value = 0;
+    }
+
+    public void AddScore(int value)
+    {
+        Value += value;
     }
 }
