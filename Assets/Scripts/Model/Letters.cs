@@ -2,7 +2,7 @@
 
 public class Letters 
 {
-    private static readonly Dictionary<char, int> _letterValuePairs = new Dictionary<char, int>()
+    private static readonly Dictionary<char, int> _letterValuePairs = new()
     {
         {'А', 1 },
         {'Б', 3 },
@@ -13,7 +13,7 @@ public class Letters
         {'Ж', 5 },
         {'З', 5 },
         {'И', 1 },
-        {'Й', 3 },
+        {'Й', 5 },
         {'К', 2 },
         {'Л', 2 },
         {'М', 2 },
@@ -31,14 +31,14 @@ public class Letters
         {'Ш', 10 },
         {'Щ', 10 },
         {'Ъ', 15 },
-        {'Ы', 3 },
+        {'Ы', 5 },
         {'Ь', 5 },
         {'Э', 6 },
         {'Ю', 6 },
         {'Я', 2 }
     };
 
-    private readonly List<char> _randomLetters = new List<char>();
+    private readonly List<char> _randomLetters = new();
 
     public  Letters()
     {

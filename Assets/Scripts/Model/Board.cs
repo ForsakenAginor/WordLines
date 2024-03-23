@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class Board
 {
-    private List<Cell> _cells = new List<Cell>();
-    private MatchFinder _matchFinder;
-    private Letters _letters;
+    private readonly List<Cell> _cells = new();
+    private readonly MatchFinder _matchFinder;
+    private readonly Letters _letters;
 
     public Board(Letters letters, MatchFinder matchfinder)
     {
@@ -29,7 +29,7 @@ public class Board
     public IEnumerable<Cell> ReplaceCells(IEnumerable<Cell> cellsForDeleting)
     {
         cellsForDeleting = cellsForDeleting.OrderBy(o => o.YPosition);
-        List<Cell> newCells = new List<Cell>();
+        List<Cell> newCells = new();
 
         foreach (Cell cell in cellsForDeleting)
         {
@@ -38,7 +38,7 @@ public class Board
             foreach (Cell dropdownCell in dropdownCells)
                 dropdownCell.MoveDown();
 
-            Cell newCell = new Cell(cell.XPosition, 0, _letters.GetRandomLetter());
+            Cell newCell = new(cell.XPosition, 0, _letters.GetRandomLetter());
             _cells.Add(newCell);
             newCells.Add(newCell);
             _cells.Remove(cell);
@@ -54,58 +54,45 @@ public class Board
         firstCell.Move(second - first);
         secondCell.Move(first - second);
     }
-
-    public WordAtBoard HZ(Vector2[] cells)
+    /*
+    public WordAtBoard FindWordMultiThreading(Vector2[] cells)
     {
-        List<WordAtBoard> results = new List<WordAtBoard>();
+        int maxTaskCount = 6;
 
-        if (cells.Length == 2)
+        if (cells.Length < maxTaskCount)
+            return FindWord(cells);
+
+        List<WordAtBoard> results = new();
+        List<Task<WordAtBoard>> tasks = new();
+        int skippedCells;
+
+        for (int i = 1; i < maxTaskCount; i++)
         {
-            int size = cells.Length / 2;
-            Vector2[] firstHalf = cells.ToList().Take(size).ToArray();
-            Vector2[] secondHalf = cells.ToList().Skip(size).ToArray();
-
-            Task<WordAtBoard> scanTask1 = new Task<WordAtBoard>(() => FindWord(firstHalf));
-            Task<WordAtBoard> scanTask2 = new Task<WordAtBoard>(() => FindWord(secondHalf));
-            scanTask1.Start();
-            scanTask2.Start();
-            scanTask1.Wait();
-            scanTask2.Wait();
-            results.Add(scanTask1.Result);
-            results.Add(scanTask2.Result);
+            skippedCells = cells.Length / maxTaskCount;
+            Vector2[] cellsPart = cells.ToList().Take(skippedCells).ToArray();
+            cells = cells.ToList().Skip(skippedCells).ToArray();
+            Task<WordAtBoard> scanTask = new(() => FindWord(cellsPart));
+            tasks.Add(scanTask);
         }
-        else
-        {
-            int size = cells.Length / 4;
-            Vector2[] first = cells.ToList().Take(size).ToArray();
-            Vector2[] second = cells.ToList().Skip(size).Take(size).ToArray();
-            Vector2[] third = cells.ToList().Skip(size).Skip(size).Take(size).ToArray();
-            Vector2[] fourth = cells.ToList().Skip(size).Skip(size).Skip(size).ToArray();
 
-            Task<WordAtBoard> scanTask1 = new Task<WordAtBoard>(() => FindWord(first));
-            Task<WordAtBoard> scanTask2 = new Task<WordAtBoard>(() => FindWord(second));
-            Task<WordAtBoard> scanTask3 = new Task<WordAtBoard>(() => FindWord(third));
-            Task<WordAtBoard> scanTask4 = new Task<WordAtBoard>(() => FindWord(fourth));
-            scanTask1.Start();
-            scanTask2.Start();
-            scanTask3.Start();
-            scanTask4.Start();
-            scanTask1.Wait();
-            scanTask2.Wait();
-            scanTask3.Wait();
-            scanTask4.Wait();
-            results.Add(scanTask1.Result);
-            results.Add(scanTask2.Result);
-            results.Add(scanTask3.Result);
-            results.Add(scanTask4.Result);
-        }
+        Task<WordAtBoard> lastTask = new(() => FindWord(cells));
+        tasks.Add(lastTask);
+
+        foreach(Task<WordAtBoard> task in tasks)
+            task.Start();
+
+        foreach (Task<WordAtBoard> task in tasks)
+            task.Wait();
+
+        foreach (Task<WordAtBoard> task in tasks)
+            results.Add(task.Result);
 
         return results.Where(o => o != null).OrderByDescending(o => o.Word.Length).FirstOrDefault();
-    }
+    }*/
 
     public WordAtBoard FindWord(Vector2[] cells)
     {
-        List<WordAtBoard> words = new List<WordAtBoard>();
+        List<WordAtBoard> words = new();
 
         foreach (var cell in cells)
         {
@@ -118,16 +105,16 @@ public class Board
 
     private void GetMatchedWord(Vector2 cell, out WordAtBoard word)
     {
-        string row = new string(Cells.Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
-        string column = new string(Cells.Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
+        string row = new(Cells.Where(o => o.YPosition == (int)cell.y).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
+        string column = new(Cells.Where(o => o.XPosition == (int)cell.x).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
         string bestWord = string.Empty;
-        List<Cell> wordPosition = new List<Cell>();
+        List<Cell> wordPosition = new();
         word = null;
 
         if (_matchFinder.TryFind(row, (int)cell.x, out string rowNoun) | _matchFinder.TryFind(column, (int)cell.y, out string columnNoun))
         {
-            rowNoun = rowNoun == null ? string.Empty : rowNoun;
-            columnNoun = columnNoun == null ? string.Empty : columnNoun;
+            rowNoun ??= string.Empty;
+            columnNoun ??= string.Empty;
 
             if (rowNoun.Length > columnNoun.Length)
             {
@@ -162,8 +149,8 @@ public class Board
 
             do
             {
-                string row = new string(Cells.Where(o => o.YPosition == cell.YPosition).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
-                string column = new string(Cells.Where(o => o.XPosition == cell.XPosition).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
+                string row = new(Cells.Where(o => o.YPosition == cell.YPosition).OrderBy(o => o.XPosition).Select(o => o.Content).ToArray());
+                string column = new(Cells.Where(o => o.XPosition == cell.XPosition).OrderBy(o => o.YPosition).Select(o => o.Content).ToArray());
                 hasMatch = _matchFinder.TryFind(row, cell.XPosition, out _) || _matchFinder.TryFind(column, cell.YPosition, out _);
 
                 if (hasMatch)

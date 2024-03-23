@@ -1,28 +1,55 @@
 ﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Root : MonoBehaviour
 {
-    [SerializeField] private NounsList _records;
-    [SerializeField] private Score _score;
+    [Header("NounsList")]
+    [SerializeField] private Transform _nounRecordHolder;
+    [SerializeField] private NounRecordView _nounViewPrefab;
+
+    [Header("")]
     [SerializeField] private Timer _timer;
+
+    [Header("Score")]
+    [SerializeField] private ScoreEffect _scoreEffectPrefab;
+    [SerializeField] private ScoreView _scoreView;
+
+    [Header("Board")]
     [SerializeField] private GameObject _boardHolder;
     [SerializeField] private CellMover _cellPrefab;
-    [SerializeField] private InputBlocker _inputBlocker;
+    [SerializeField] private GraphicRaycaster _raycaster;
+
+    [Header("")]
     [SerializeField] private Canvas _endGameScreen;
 
-    private BoardInitializer _board;
+    [Header("")]
+    [SerializeField] private AudioSource _audioSource;
+
+    private string _rawNounsInfo;
+    private BoardManager _board;
     private NounDictionary _nounDictionary;
     private Letters _letters;
+    private Score _score;
+    private ScoreEffectPool _effectCreator;
+    private NounsList _records;
 
     private void Awake()
     {
         Time.timeScale = 0;
         _letters = new Letters();
-        _nounDictionary = new NounDictionary();
-        _board = _boardHolder.AddComponent(typeof(BoardInitializer)) as BoardInitializer;
+        _rawNounsInfo = new FileLoader().Dictionary;
+        _nounDictionary = new NounDictionary(_rawNounsInfo);
+        _board = _boardHolder.AddComponent(typeof(BoardManager)) as BoardManager;
         _board.Init(_letters, _nounDictionary, _cellPrefab);
-        _inputBlocker.Init(_board);
+        InputBlocker _ = new(_board, _raycaster);
+        _score = new();
+        _scoreView.Init(_score);
+        _effectCreator = _boardHolder.AddComponent<ScoreEffectPool>();
+        _effectCreator.Init(_scoreEffectPrefab);
+        _records = transform.AddComponent<NounsList>();
+        _records.Init(_nounRecordHolder, _nounViewPrefab);
     }
 
     private void OnEnable()
@@ -48,7 +75,7 @@ public class Root : MonoBehaviour
         _score.Restart();
         _records.Restart();
         _timer.Restart();
-        _nounDictionary = new NounDictionary();
+        _nounDictionary = new NounDictionary(_rawNounsInfo);
         _board.ResetBoard(_letters, _nounDictionary);
         _endGameScreen.gameObject.SetActive(false);
         float commonTimeScale = 1f;
@@ -66,13 +93,16 @@ public class Root : MonoBehaviour
         _endGameScreen.gameObject.SetActive(true);
     }
 
-    private void OnWordFound(string word, int combo)
+    private void OnWordFound(string word, int combo, Vector3 position)
     {
-        if(_nounDictionary.Nouns.ContainsKey(word) == false)
+        if (_nounDictionary.Nouns.ContainsKey(word) == false)
             throw new ArgumentOutOfRangeException(nameof(word));
 
+        _audioSource.Play();
         _records.AddRecord(word, _nounDictionary.Nouns[word]);
         _nounDictionary.RemoveWord(word);
-        _score.SetScore(word, combo);
+        int addingScore = Score.CalcScore(word, combo);
+        _score.AddScore(addingScore);
+        _effectCreator.SpawnEffect(position, addingScore, combo);
     }
 }

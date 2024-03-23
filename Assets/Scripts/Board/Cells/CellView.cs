@@ -10,17 +10,17 @@ public class CellView : MonoBehaviour
     [SerializeField] private TMP_Text _letter;
     [SerializeField] private TMP_Text _weight;
 
-    private Image _image;
-    private Dictionary<int, Color> _colors = new Dictionary<int, Color>()
+    private readonly Dictionary<int, Color> _colors = new()
     {
         { 1, Color.green },
         { 2, Color.cyan },
-        { 3, Color.blue },
+        { 3, new Color(0.34f, 0.34f, 0.95f) },
         { 5, Color.yellow },
         { 6, new Color(0.8f, 0.5f, 0) },
-        { 10, Color.red },
-        { 15, Color.white },
+        { 10, new Color(0.8f, 0.17f, 0.17f) },
+        { 15, new Color(0.5f, 0.7f, 0.67f) },
     };
+    private Image _image;
 
     private void Awake()
     {
@@ -32,14 +32,16 @@ public class CellView : MonoBehaviour
         _letter.text = letter.ToString();
         int weight = Letters.GetLetterValue(letter);
         _weight.text = weight.ToString();
-
+        
         if(_colors.ContainsKey(weight))
             _image.color = _colors[weight];
         else
             _image.color = Color.white;
-
+        
         transform.localScale = Vector3.zero;
-        transform.DOScale(1, 2);
+        float normalScale = 1f;
+        float duration = 2f;
+        transform.DOScale(normalScale, duration);
     }
 
 }
