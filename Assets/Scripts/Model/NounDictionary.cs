@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using UnityEngine;
 
 public class NounDictionary
 {
-    private const string FileName = "nouns.txt";
-
     private readonly string _fileContent;
     private readonly Dictionary<string, string> _nouns = new();
-    
-    public NounDictionary()
+
+    public NounDictionary(string rawDictionary)
     {
-        string path = $"{Application.streamingAssetsPath}/{FileName}"; 
-        _fileContent = File.ReadAllText(path);
+        _fileContent = rawDictionary;
         Fill();
         FilterBySize(BoardConfig.Width > BoardConfig.Height ? BoardConfig.Width : BoardConfig.Height);
     }
@@ -25,7 +20,7 @@ public class NounDictionary
 
     public void RemoveWord(string word)
     {
-        if(_nouns.ContainsKey(word) == false)
+        if (_nouns.ContainsKey(word) == false)
             throw new ArgumentOutOfRangeException(nameof(word));
 
         _nouns.Remove(word);
@@ -38,7 +33,7 @@ public class NounDictionary
         const string NounDefinitionSeparator = ":";
 
         string[] strings = _fileContent.Split(StringSeparator);
-        
+
         foreach (string item in strings)
         {
             string noun = item.Split(NounDefinitionSeparator).First().ToUpper();
@@ -46,14 +41,14 @@ public class NounDictionary
             _nouns.Add(noun, definition);
         }
     }
-    
+
     private void FilterBySize(int maxSize)
     {
         var tempList = _nouns.Keys.ToList();
 
-        foreach(string noun in tempList)
+        foreach (string noun in tempList)
         {
-            if(noun.Length > maxSize)
+            if (noun.Length > maxSize)
                 _nouns.Remove(noun);
         }
     }

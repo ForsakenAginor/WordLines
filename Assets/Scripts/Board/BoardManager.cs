@@ -79,7 +79,7 @@ public class BoardManager : MonoBehaviour
 
     private void StartScanCycle(Vector2[] cells)
     {
-        WordAtBoard bestResult = _board.FindWordMultiThreading(cells);
+        WordAtBoard bestResult = _board.FindWord(cells);
 
         if (bestResult == null)
             return;
@@ -99,7 +99,7 @@ public class BoardManager : MonoBehaviour
 
         while (true)
         {
-            WordAtBoard bestResult = _board.FindWordMultiThreading(cells);
+            WordAtBoard bestResult = _board.FindWord(cells);
 
             if (bestResult == null)
             {
