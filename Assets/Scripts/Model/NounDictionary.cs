@@ -9,7 +9,7 @@ public class NounDictionary
 
     public NounDictionary(string rawDictionary)
     {
-        _fileContent = rawDictionary;
+        _fileContent = rawDictionary ?? throw new ArgumentNullException(nameof(rawDictionary));
         Fill();
         FilterBySize(BoardConfig.Width > BoardConfig.Height ? BoardConfig.Width : BoardConfig.Height);
     }

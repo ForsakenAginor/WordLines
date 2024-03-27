@@ -54,7 +54,7 @@ public class Board
         firstCell.Move(second - first);
         secondCell.Move(first - second);
     }
-    /*
+    
     public WordAtBoard FindWordMultiThreading(Vector2[] cells)
     {
         int maxTaskCount = 6;
@@ -88,7 +88,7 @@ public class Board
             results.Add(task.Result);
 
         return results.Where(o => o != null).OrderByDescending(o => o.Word.Length).FirstOrDefault();
-    }*/
+    }
 
     public WordAtBoard FindWord(Vector2[] cells)
     {

@@ -19,10 +19,6 @@ public class ScoreView : MonoBehaviour
     public void Init(Score score)
     {
         _score = score ?? throw new ArgumentNullException(nameof(score));
-    }
-
-    private void OnEnable()
-    {
         _score.ValueChanged += OnValueChanged;
     }
 

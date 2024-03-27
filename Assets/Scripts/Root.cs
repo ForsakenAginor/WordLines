@@ -15,6 +15,7 @@ public class Root : MonoBehaviour
     [Header("Score")]
     [SerializeField] private ScoreEffect _scoreEffectPrefab;
     [SerializeField] private ScoreView _scoreView;
+    [SerializeField] private ScoreRecordView _scoreRecordView;
 
     [Header("Board")]
     [SerializeField] private GameObject _boardHolder;
@@ -33,27 +34,28 @@ public class Root : MonoBehaviour
     private Letters _letters;
     private Score _score;
     private ScoreEffectPool _effectCreator;
+    private ScoreRecordsManager _recordsManager;
     private NounsList _records;
 
-    private void Awake()
+    public void Init(string dictionary)
     {
         Time.timeScale = 0;
         _letters = new Letters();
-        _rawNounsInfo = new FileLoader().Dictionary;
+
+        _rawNounsInfo = dictionary;
         _nounDictionary = new NounDictionary(_rawNounsInfo);
         _board = _boardHolder.AddComponent(typeof(BoardManager)) as BoardManager;
         _board.Init(_letters, _nounDictionary, _cellPrefab);
         InputBlocker _ = new(_board, _raycaster);
         _score = new();
         _scoreView.Init(_score);
+        _recordsManager = new ScoreRecordsManager();
+        _scoreRecordView.Init(_recordsManager);
         _effectCreator = _boardHolder.AddComponent<ScoreEffectPool>();
         _effectCreator.Init(_scoreEffectPrefab);
         _records = transform.AddComponent<NounsList>();
         _records.Init(_nounRecordHolder, _nounViewPrefab);
-    }
 
-    private void OnEnable()
-    {
         _board.WordFound += OnWordFound;
         _timer.TimeEnded += OnTimeEnded;
     }
@@ -90,6 +92,7 @@ public class Root : MonoBehaviour
     private void OnTimeEnded()
     {
         Time.timeScale = 0;
+        _recordsManager.SetBestScores(_score.Value);
         _endGameScreen.gameObject.SetActive(true);
     }
 

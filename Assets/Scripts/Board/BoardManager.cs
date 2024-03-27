@@ -36,15 +36,8 @@ public class BoardManager : MonoBehaviour
             CellMover cellMover = Instantiate(_cellPrefab, transform);
             cellMover.Init(cell, transform);
             _cells.Add(cellMover);
+            cellMover.CellsSwapped += OnCellsSwapped;
         }
-
-        OnEnable();
-    }
-
-    private void OnEnable()
-    {
-        for (int i = 0; i < _cells.Count; i++)
-            _cells[i].CellsSwapped += OnCellsSwapped;
     }
 
     private void OnDisable()
