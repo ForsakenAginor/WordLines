@@ -27,7 +27,7 @@ public class ScoreEffectPool : MonoBehaviour
             spawned = _pool.Pop();
             spawned.Init(score, position, combo);
             spawned.gameObject.SetActive(true);
-            spawned.enabled = true;
+            //spawned.enabled = true;
         }
 
         StartCoroutine(ReturnToPool(spawned));

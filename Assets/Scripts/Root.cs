@@ -28,6 +28,9 @@ public class Root : MonoBehaviour
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
 
+    [Header("YandexSDK")]
+    [SerializeField] private Yandex _yandex;
+
     private string _rawNounsInfo;
     private BoardManager _board;
     private NounDictionary _nounDictionary;
@@ -49,7 +52,12 @@ public class Root : MonoBehaviour
         InputBlocker _ = new(_board, _raycaster);
         _score = new();
         _scoreView.Init(_score);
-        _recordsManager = new ScoreRecordsManager();
+
+#if UNITY_WEBGL
+        _recordsManager = new ScoreRecordsManager(_yandex);
+#else
+        _recordsManager = new ScoreRecordsManager();        
+#endif
         _scoreRecordView.Init(_recordsManager);
         _effectCreator = _boardHolder.AddComponent<ScoreEffectPool>();
         _effectCreator.Init(_scoreEffectPrefab);

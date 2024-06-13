@@ -37,11 +37,11 @@ public class CellView : MonoBehaviour
             _image.color = _colors[weight];
         else
             _image.color = Color.white;
-        
+        /*
         transform.localScale = Vector3.zero;
         float normalScale = 1f;
         float duration = 2f;
-        transform.DOScale(normalScale, duration);
+        transform.DOScale(normalScale, duration);*/
     }
 
 }

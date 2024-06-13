@@ -6,14 +6,15 @@ public class ScoreRecordsManager
 {
     private const string RecordsFileName = "Records.json";
 
-    private Record _record;
-    private string _path = Path.Combine(Application.streamingAssetsPath, RecordsFileName);
+    private readonly RecordsData _record;
+    private readonly string _path = Path.Combine(Application.streamingAssetsPath, RecordsFileName);
+    private readonly Yandex _yandex;
 
     public ScoreRecordsManager()
     {
         if (File.Exists(_path))
         {
-            _record = JsonUtility.FromJson<Record>(File.ReadAllText(_path));
+            _record = JsonUtility.FromJson<RecordsData>(File.ReadAllText(_path));
 
             if(_record.Today != DateTime.Today.ToBinary())
             {
@@ -25,9 +26,29 @@ public class ScoreRecordsManager
         }
         else
         {
-            _record = new Record();
-            _record.Today = DateTime.Today.ToBinary();
+            _record = new()
+            {
+                Today = DateTime.Today.ToBinary()
+            };
         }
+    }
+
+    public ScoreRecordsManager(Yandex yandex)
+    {
+        _yandex = yandex != null ? yandex : throw new ArgumentNullException(nameof(yandex));/*
+        _record = _yandex.Load();
+
+        if(_record == null)
+            _record = new RecordsData();
+
+        if (_record.Today != DateTime.Today.ToBinary())
+        {
+            _record.Today = DateTime.Today.ToBinary();
+            _record.TodayScore = 0;
+        }
+
+        SaveRecord();*/
+        _record = new();
     }
 
     public event Action<int> RecordRefreshed;
@@ -54,15 +75,11 @@ public class ScoreRecordsManager
     }
 
     private void SaveRecord()
-    {
+    {/*
+#if UNITY_WEBGL
+        _yandex.Save(_record);
+#else
         File.WriteAllText(_path, JsonUtility.ToJson(_record));
-    }
-
-    [Serializable]
-    private class Record
-    {
-        public int Score;
-        public int TodayScore;
-        public long Today;
+#endif*/
     }
 }
