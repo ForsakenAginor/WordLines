@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Root : MonoBehaviour
 {
+    private const string FileName = "nouns.txt";
+
     [Header("NounsList")]
     [SerializeField] private Transform _nounRecordHolder;
     [SerializeField] private NounRecordView _nounViewPrefab;
@@ -28,9 +33,7 @@ public class Root : MonoBehaviour
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
 
-    [Header("YandexSDK")]
-    [SerializeField] private Yandex _yandex;
-
+    private readonly string _path = Path.Combine(Application.streamingAssetsPath, FileName);
     private string _rawNounsInfo;
     private BoardManager _board;
     private NounDictionary _nounDictionary;
@@ -40,7 +43,21 @@ public class Root : MonoBehaviour
     private ScoreRecordsManager _recordsManager;
     private NounsList _records;
 
-    public void Init(string dictionary)
+    private IEnumerator Start()
+    {
+        string result = string.Empty;
+        using UnityWebRequest loadingRequest = UnityWebRequest.Get(_path);
+        yield return loadingRequest.SendWebRequest();
+
+        if (loadingRequest.result == UnityWebRequest.Result.ConnectionError || loadingRequest.result == UnityWebRequest.Result.ProtocolError)
+            Debug.LogErrorFormat(this, "Unable to load text due to {0} - {1}", loadingRequest.responseCode, loadingRequest.error);
+        else
+            result = System.Text.Encoding.UTF8.GetString(loadingRequest.downloadHandler.data);
+
+        Init(result);
+    }
+
+    private void Init(string dictionary)
     {
         Time.timeScale = 0;
         _letters = new Letters();
@@ -53,11 +70,8 @@ public class Root : MonoBehaviour
         _score = new();
         _scoreView.Init(_score);
 
-#if UNITY_WEBGL
-        _recordsManager = new ScoreRecordsManager(_yandex);
-#else
-        _recordsManager = new ScoreRecordsManager();        
-#endif
+        _recordsManager = new ScoreRecordsManager();
+
         _scoreRecordView.Init(_recordsManager);
         _effectCreator = _boardHolder.AddComponent<ScoreEffectPool>();
         _effectCreator.Init(_scoreEffectPrefab);
