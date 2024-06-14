@@ -3,7 +3,6 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 
-[RequireComponent(typeof(AudioSource))]
 public class Timer : MonoBehaviour
 {
     [SerializeField] private TMP_Text _text;
@@ -11,11 +10,11 @@ public class Timer : MonoBehaviour
     [SerializeField] private float _roundTime = 240;
     [SerializeField] private  float _pulseStartTime = 30f;
     [SerializeField] private  float _changeColorTime = 15f;
+    [SerializeField] private AudioSource _audioSource;
 
     private float _remainingSeconds;
     private Tweener _tweener;
     private Color _commonColor;
-    private AudioSource _audioSource;
 
     public event Action TimeEnded;
 
@@ -31,7 +30,6 @@ public class Timer : MonoBehaviour
     {
         _remainingSeconds = _roundTime;
         _commonColor = _text.color;
-        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
