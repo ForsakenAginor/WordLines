@@ -14,9 +14,9 @@ public class LeaderboardOpener : MonoBehaviour
 
     private ScoreRecordsManager _playerScore;
 
-    private void Start()
+    public void Init(ScoreRecordsManager playerScore)
     {
-        _playerScore = new ();
+        _playerScore = playerScore != null ? playerScore : throw new ArgumentNullException(nameof(playerScore));
         _openLeaderboardButton.onClick.AddListener(TryOpenLeaderboard);
     }
 

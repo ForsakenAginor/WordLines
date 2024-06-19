@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Agava.YandexGames;
+using System;
 using System.Collections;
 using System.IO;
 using Unity.VisualScripting;
@@ -30,6 +31,7 @@ public class Root : MonoBehaviour
     [Header("")]
     [SerializeField] private Canvas _endGameScreen;
     [SerializeField] private GameObject _tutorial;
+    [SerializeField] private LeaderboardOpener _leaderboardOpener;
 
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
@@ -55,6 +57,7 @@ public class Root : MonoBehaviour
         else
             result = System.Text.Encoding.UTF8.GetString(loadingRequest.downloadHandler.data);
 
+        StickyAd.Show();
         Init(result);
         ShowTutorial();
     }
@@ -73,6 +76,7 @@ public class Root : MonoBehaviour
         _scoreView.Init(_score);
 
         _recordsManager = new ScoreRecordsManager();
+        _leaderboardOpener.Init(_recordsManager);
 
         _scoreRecordView.Init(_recordsManager);
         _effectCreator = _boardHolder.AddComponent<ScoreEffectPool>();
@@ -102,6 +106,13 @@ public class Root : MonoBehaviour
         _timer.TimeEnded -= OnTimeEnded;
     }
 
+    public void StartGame()
+    {
+        _timer.gameObject.SetActive(true);
+        float commonTimeScale = 1f;
+        Time.timeScale = commonTimeScale;
+    }
+
     public void RestartGame()
     {
         _score.Restart();
@@ -111,6 +122,7 @@ public class Root : MonoBehaviour
         _nounDictionary = new NounDictionary(_rawNounsInfo);
         _board.ResetBoard(_letters, _nounDictionary);
         _endGameScreen.gameObject.SetActive(false);
+        InterstitialAd.Show();
         float commonTimeScale = 1f;
         Time.timeScale = commonTimeScale;
     }
