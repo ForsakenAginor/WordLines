@@ -30,7 +30,7 @@ public class Letters
         {'Ч', 5 },
         {'Ш', 10 },
         {'Щ', 10 },
-        {'Ъ', 15 },
+        {'Ъ', 10 },
         {'Ы', 5 },
         {'Ь', 5 },
         {'Э', 6 },
@@ -74,5 +74,4 @@ public class Letters
                 _randomLetters.Add(letter);
         }
     }
-
 }

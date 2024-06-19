@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
+
 
 [RequireComponent(typeof(Image))]
 public class CellView : MonoBehaviour
@@ -18,7 +18,6 @@ public class CellView : MonoBehaviour
         { 5, Color.yellow },
         { 6, new Color(0.8f, 0.5f, 0) },
         { 10, new Color(0.8f, 0.17f, 0.17f) },
-        { 15, new Color(0.5f, 0.7f, 0.67f) },
     };
     private Image _image;
 
@@ -37,11 +36,5 @@ public class CellView : MonoBehaviour
             _image.color = _colors[weight];
         else
             _image.color = Color.white;
-        /*
-        transform.localScale = Vector3.zero;
-        float normalScale = 1f;
-        float duration = 2f;
-        transform.DOScale(normalScale, duration);*/
     }
-
 }

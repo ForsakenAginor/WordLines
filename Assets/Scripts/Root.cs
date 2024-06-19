@@ -88,12 +88,6 @@ public class Root : MonoBehaviour
         _timer.TimeEnded -= OnTimeEnded;
     }
 
-    public void Launch()
-    {
-        float commonTimeScale = 1f;
-        Time.timeScale = commonTimeScale;
-    }
-
     public void RestartGame()
     {
         _score.Restart();
