@@ -29,6 +29,7 @@ public class Root : MonoBehaviour
 
     [Header("")]
     [SerializeField] private Canvas _endGameScreen;
+    [SerializeField] private GameObject _tutorial;
 
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
@@ -55,6 +56,7 @@ public class Root : MonoBehaviour
             result = System.Text.Encoding.UTF8.GetString(loadingRequest.downloadHandler.data);
 
         Init(result);
+        ShowTutorial();
     }
 
     private void Init(string dictionary)
@@ -82,6 +84,18 @@ public class Root : MonoBehaviour
         _timer.TimeEnded += OnTimeEnded;
     }
 
+    private void ShowTutorial()
+    {
+        TutorialData tutorialData = new();
+
+        if(tutorialData.IsTutorialCompleted == false)
+        {
+            Time.timeScale = 1f;
+            _timer.gameObject.SetActive(false);
+            _tutorial.SetActive(true);
+        }
+    }
+
     private void OnDisable()
     {
         _board.WordFound -= OnWordFound;
@@ -92,17 +106,13 @@ public class Root : MonoBehaviour
     {
         _score.Restart();
         _records.Restart();
+        _timer.gameObject.SetActive(true);
         _timer.Restart();
         _nounDictionary = new NounDictionary(_rawNounsInfo);
         _board.ResetBoard(_letters, _nounDictionary);
         _endGameScreen.gameObject.SetActive(false);
         float commonTimeScale = 1f;
         Time.timeScale = commonTimeScale;
-    }
-
-    public void Close()
-    {
-        Application.Quit();
     }
 
     private void OnTimeEnded()
