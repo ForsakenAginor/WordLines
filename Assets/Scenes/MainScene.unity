@@ -8739,6 +8739,7 @@ MonoBehaviour:
   _raycaster: {fileID: 651707458}
   _endGameScreen: {fileID: 1729202873}
   _tutorial: {fileID: 1515127215}
+  _leaderboardOpener: {fileID: 867965020}
   _audioSource: {fileID: 1466625608}
 --- !u!4 &867965012
 Transform:
@@ -10945,10 +10946,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1113613658}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7b6e39cfec110444ac93e01bf18e52d, type: 3}
+  m_Script: {fileID: 11500000, guid: cff6f33b75fdfdd418b6fdfdb5c0d104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _button: {fileID: 1113613660}
   _root: {fileID: 867965011}
 --- !u!1 &1117062339
 GameObject:
