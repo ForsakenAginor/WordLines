@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Agava.YandexGames;
 
 public class Root : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class Root : MonoBehaviour
     [SerializeField] private GameObject _tutorial;
     [SerializeField] private LeaderboardOpener _leaderboardOpener;
     [SerializeField] private GameObject _buttonsPanel;
+    [SerializeField] private GameObject _startPanel;
 
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
@@ -129,6 +131,7 @@ public class Root : MonoBehaviour
         _records.Restart();
         _timer.gameObject.SetActive(true);
         _timer.Restart();
+        _timer.gameObject.SetActive(false);
         _nounDictionary = new NounDictionary(_rawNounsInfo);
         _board.ResetBoard(_letters, _nounDictionary);
         _endGameScreen.gameObject.SetActive(false);
@@ -138,7 +141,7 @@ public class Root : MonoBehaviour
 #else
         Time.timeScale = 1f;
 #endif
-        _buttonsPanel.SetActive(true);
+        _startPanel.SetActive(true);
     }
 
     private void OnTimeEnded()

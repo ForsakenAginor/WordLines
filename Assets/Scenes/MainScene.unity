@@ -8329,7 +8329,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 659ba65fe6957b54f80f898aa5075517, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9dc36aa93eeb60d40afff702f30f7227, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -8613,6 +8613,7 @@ MonoBehaviour:
   _tutorial: {fileID: 1515127215}
   _leaderboardOpener: {fileID: 867965020}
   _buttonsPanel: {fileID: 1355925291}
+  _startPanel: {fileID: 1078138414}
   _audioSource: {fileID: 1663253738}
   _musicChoser: {fileID: 1114240758}
   _silencer: {fileID: 867965021}
@@ -16569,7 +16570,6 @@ GameObject:
   - component: {fileID: 1636370597}
   - component: {fileID: 1636370596}
   - component: {fileID: 1636370595}
-  - component: {fileID: 1636370599}
   m_Layer: 5
   m_Name: StartGameCanvas
   m_TagString: Untagged
@@ -16661,21 +16661,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1636370599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1636370594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05c759cfdb5e025498a7c2f9feb86b71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetPanel: {fileID: 0}
-  _holderPanel: {fileID: 1636370594}
-  _toggleButton: {fileID: 1113613660}
 --- !u!1 &1646732506
 GameObject:
   m_ObjectHideFlags: 0
