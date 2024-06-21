@@ -8612,6 +8612,7 @@ MonoBehaviour:
   _endGameScreen: {fileID: 1729202873}
   _tutorial: {fileID: 1515127215}
   _leaderboardOpener: {fileID: 867965020}
+  _buttonsPanel: {fileID: 1355925291}
   _audioSource: {fileID: 1663253738}
   _musicChoser: {fileID: 1114240758}
   _silencer: {fileID: 867965021}

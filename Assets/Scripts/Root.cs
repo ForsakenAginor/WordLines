@@ -32,6 +32,7 @@ public class Root : MonoBehaviour
     [SerializeField] private Canvas _endGameScreen;
     [SerializeField] private GameObject _tutorial;
     [SerializeField] private LeaderboardOpener _leaderboardOpener;
+    [SerializeField] private GameObject _buttonsPanel;
 
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
@@ -124,6 +125,7 @@ public class Root : MonoBehaviour
 
     public void RestartGame()
     {
+        _buttonsPanel.SetActive(false);
         _score.Restart();
         _records.Restart();
         _timer.gameObject.SetActive(true);
@@ -137,6 +139,7 @@ public class Root : MonoBehaviour
 #else
         Time.timeScale = 1f;
 #endif
+        _buttonsPanel.SetActive(true);
     }
 
     private void OnTimeEnded()
