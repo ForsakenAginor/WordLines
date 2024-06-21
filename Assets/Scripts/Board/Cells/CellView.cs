@@ -30,7 +30,6 @@ public class CellView : MonoBehaviour
     {
         _letter.text = letter.ToString();
         int weight = Letters.GetLetterValue(letter);
-        _weight.text = weight.ToString();
         
         if(_colors.ContainsKey(weight))
             _image.color = _colors[weight];
