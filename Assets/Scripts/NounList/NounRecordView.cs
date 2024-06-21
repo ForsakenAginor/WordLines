@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Agava.WebUtility;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,8 +16,13 @@ public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         _description.ForceMeshUpdate();
         float scaleStep = 1.2f;
         float half = 2f;
-        float middleHeight = (Screen.height / half) * 0.7f;
+        float middleHeight;
         float widthFactor = 1500f;
+
+        if (Device.IsMobile == false)
+            middleHeight = (Screen.height / half) * 0.7f;
+        else
+            middleHeight = (Screen.width / half) * 0.7f;
 
         while (_description.isTextOverflowing)
         {
