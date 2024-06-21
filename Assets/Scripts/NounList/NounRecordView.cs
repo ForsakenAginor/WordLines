@@ -15,7 +15,7 @@ public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         _description.ForceMeshUpdate();
         float scaleStep = 1.2f;
         float half = 2f;
-        float middleHeight = Screen.height / half;
+        float middleHeight = (Screen.height / half) * 0.8f;
         float widthFactor = 1500f;
 
         while (_description.isTextOverflowing)
