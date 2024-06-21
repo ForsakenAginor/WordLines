@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -8,31 +9,57 @@ public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     [SerializeField] private TMP_Text _description;
     [SerializeField] private TMP_Text _noun;
 
-    public  void Init(string noun, string description)
+    public void Init(string noun, string description)
     {
         _noun.text = noun;
         _description.text = $"{description}";
         _description.ForceMeshUpdate();
-        float scaleStep = 1.5f;
+        float scaleStep = 1.2f;
+        float middleHeight = 540;
+        float widthFactor = 1500;
 
         while (_description.isTextOverflowing)
         {
-            _background.sizeDelta = new Vector2(_background.rect.width, _background.rect.height * scaleStep);
+            if (_background.rect.height < middleHeight)
+                _background.sizeDelta = new Vector2(_background.rect.width, _background.rect.height * scaleStep);
+            else
+                _background.sizeDelta = new Vector2(_background.rect.width * scaleStep, _background.rect.height);
+
             _description.ForceMeshUpdate();
+
+            if (_background.rect.width > widthFactor)
+            {
+                _description.overflowMode = TextOverflowModes.Truncate;
+                break;
+            }
         }
 
-        float half = 2f;
-        _background.localPosition = new Vector3(_background.sizeDelta.x / half, -_background.sizeDelta.y / half, 0);
+        SetPosition();
         _background.gameObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        SetPosition();
         _background.gameObject.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         _background.gameObject.SetActive(false);
+    }
+
+    private void SetPosition()
+    {
+        float middleHeight = 540;
+        int directionFactor;
+        float half = 2f;
+
+        if (_noun.transform.position.y < middleHeight)
+            directionFactor = 1;
+        else
+            directionFactor = -1;
+
+        _background.localPosition = new Vector3(_background.sizeDelta.x / half, directionFactor * _background.sizeDelta.y / half, 0);
     }
 }
