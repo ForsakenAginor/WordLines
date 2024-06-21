@@ -7,11 +7,6 @@ public class Silencer : MonoBehaviour
     private GameState _gameState;
     private bool _inApp = true;
 
-    private void Start()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     private void OnEnable()
     {
         _gameState = new(1f, 1f, false);

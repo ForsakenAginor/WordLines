@@ -35,6 +35,10 @@ public class Root : MonoBehaviour
 
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private RandomMusicChoser _musicChoser;
+
+    [Header("")]
+    [SerializeField] private Silencer _silencer;
 
     private readonly string _path = Path.Combine(Application.streamingAssetsPath, FileName);
     private string _rawNounsInfo;
@@ -45,6 +49,7 @@ public class Root : MonoBehaviour
     private ScoreEffectPool _effectCreator;
     private ScoreRecordsManager _recordsManager;
     private NounsList _records;
+    private AdvertiseShower _advertiseShower;
 
     private IEnumerator Start()
     {
@@ -57,7 +62,9 @@ public class Root : MonoBehaviour
         else
             result = System.Text.Encoding.UTF8.GetString(loadingRequest.downloadHandler.data);
 
+#if UNITY_WEBGL && !UNITY_EDITOR
         StickyAd.Show();
+#endif
         Init(result);
         ShowTutorial();
     }
@@ -84,6 +91,8 @@ public class Root : MonoBehaviour
         _records = transform.AddComponent<NounsList>();
         _records.Init(_nounRecordHolder, _nounViewPrefab);
 
+        _advertiseShower = new(_silencer);
+
         _board.WordFound += OnWordFound;
         _timer.TimeEnded += OnTimeEnded;
     }
@@ -92,7 +101,7 @@ public class Root : MonoBehaviour
     {
         TutorialData tutorialData = new();
 
-        if(tutorialData.IsTutorialCompleted == false)
+        if (tutorialData.IsTutorialCompleted == false)
         {
             Time.timeScale = 1f;
             _timer.gameObject.SetActive(false);
@@ -122,9 +131,12 @@ public class Root : MonoBehaviour
         _nounDictionary = new NounDictionary(_rawNounsInfo);
         _board.ResetBoard(_letters, _nounDictionary);
         _endGameScreen.gameObject.SetActive(false);
-        InterstitialAd.Show();
-        float commonTimeScale = 1f;
-        Time.timeScale = commonTimeScale;
+        _musicChoser.ChoseRandomClip();
+#if UNITY_WEBGL && !UNITY_EDITOR
+        _advertiseShower.ShowAdvertise();
+#else
+        Time.timeScale = 1f;
+#endif
     }
 
     private void OnTimeEnded()
