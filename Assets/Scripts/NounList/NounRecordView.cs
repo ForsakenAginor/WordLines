@@ -1,7 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -15,8 +14,9 @@ public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         _description.text = $"{description}";
         _description.ForceMeshUpdate();
         float scaleStep = 1.2f;
-        float middleHeight = 540;
-        float widthFactor = 1500;
+        float half = 2f;
+        float middleHeight = Screen.height / half;
+        float widthFactor = Screen.width * 0.8f;
 
         while (_description.isTextOverflowing)
         {
@@ -51,9 +51,9 @@ public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void SetPosition()
     {
-        float middleHeight = 540;
-        int directionFactor;
         float half = 2f;
+        float middleHeight = Screen.height / half;
+        int directionFactor;
 
         if (_noun.transform.position.y < middleHeight)
             directionFactor = 1;
