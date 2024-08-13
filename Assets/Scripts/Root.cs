@@ -68,6 +68,11 @@ public class Root : MonoBehaviour
         StickyAd.Show();
 #endif
         Init(result);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        YandexGamesSdk.GameReady();
+#endif
+
         ShowTutorial();
     }
 
@@ -136,6 +141,7 @@ public class Root : MonoBehaviour
         _board.ResetBoard(_letters, _nounDictionary);
         _endGameScreen.gameObject.SetActive(false);
         _musicChoser.ChoseRandomClip();
+
 #if UNITY_WEBGL && !UNITY_EDITOR
         _advertiseShower.ShowAdvertise();
 #else
