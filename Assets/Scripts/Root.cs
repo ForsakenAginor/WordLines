@@ -131,6 +131,9 @@ public class Root : MonoBehaviour
 
     public void RestartGame()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        _advertiseShower.ShowAdvertise();
+#endif
         _buttonsPanel.SetActive(false);
         _score.Restart();
         _records.Restart();
@@ -141,13 +144,11 @@ public class Root : MonoBehaviour
         _board.ResetBoard(_letters, _nounDictionary);
         _endGameScreen.gameObject.SetActive(false);
         _musicChoser.ChoseRandomClip();
+        _startPanel.SetActive(true);
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-        _advertiseShower.ShowAdvertise();
-#else
+#if UNITY_EDITOR
         Time.timeScale = 1f;
 #endif
-        _startPanel.SetActive(true);
     }
 
     private void OnTimeEnded()
