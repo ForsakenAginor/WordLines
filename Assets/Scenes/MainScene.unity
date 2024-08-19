@@ -8614,7 +8614,7 @@ MonoBehaviour:
   _leaderboardOpener: {fileID: 867965020}
   _buttonsPanel: {fileID: 1355925291}
   _startPanel: {fileID: 1078138414}
-  _loadingPanel: {fileID: 0}
+  _loadingPanel: {fileID: 910065158}
   _audioSource: {fileID: 1663253738}
   _musicChoser: {fileID: 1114240758}
   _silencer: {fileID: 867965021}
