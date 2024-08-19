@@ -5,17 +5,19 @@ using UnityEngine;
 public class AdvertiseShower
 {
     private readonly Silencer _silencer;
+    private Action _callback;
 
     public AdvertiseShower(Silencer silencer)
     {
         _silencer = silencer != null ? silencer : throw new ArgumentNullException(nameof(silencer));
     }
 
-    public void ShowAdvertise()
+    public void ShowAdvertise(Action callback)
     {
         Time.timeScale = 0f;
         AudioListener.pause = true;
         AudioListener.volume = 0f;
+        _callback = callback;
         InterstitialAd.Show(null, OnCloseAdvertise);
     }
 
@@ -25,5 +27,6 @@ public class AdvertiseShower
         AudioListener.volume = 1f;
         Time.timeScale = 1f;
         _silencer.SetGameState(Time.timeScale, AudioListener.volume, AudioListener.pause);
+        _callback?.Invoke();
     }
 }

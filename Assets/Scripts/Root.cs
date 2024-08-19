@@ -28,12 +28,13 @@ public class Root : MonoBehaviour
     [SerializeField] private CellMover _cellPrefab;
     [SerializeField] private GraphicRaycaster _raycaster;
 
-    [Header("")]
+    [Header("UI")]
     [SerializeField] private Canvas _endGameScreen;
     [SerializeField] private GameObject _tutorial;
     [SerializeField] private LeaderboardOpener _leaderboardOpener;
     [SerializeField] private GameObject _buttonsPanel;
     [SerializeField] private GameObject _startPanel;
+    [SerializeField] private GameObject _loadingPanel;
 
     [Header("")]
     [SerializeField] private AudioSource _audioSource;
@@ -132,8 +133,18 @@ public class Root : MonoBehaviour
     public void RestartGame()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
-        _advertiseShower.ShowAdvertise();
+        _loadingPanel.SetActive(true);
+        _advertiseShower.ShowAdvertise(ResetProgress);
 #endif
+
+#if UNITY_EDITOR
+        ResetProgress();
+        Time.timeScale = 1f;
+#endif
+    }
+
+    private void ResetProgress()
+    {
         _buttonsPanel.SetActive(false);
         _score.Restart();
         _records.Restart();
@@ -145,10 +156,7 @@ public class Root : MonoBehaviour
         _endGameScreen.gameObject.SetActive(false);
         _musicChoser.ChoseRandomClip();
         _startPanel.SetActive(true);
-
-#if UNITY_EDITOR
-        Time.timeScale = 1f;
-#endif
+        _loadingPanel.SetActive(false);
     }
 
     private void OnTimeEnded()
