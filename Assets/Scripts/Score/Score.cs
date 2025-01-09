@@ -16,7 +16,7 @@ public class Score
         }
     }
 
-    public static int CalcScore(string word, int combo)
+    public static int CalcScore(string word, int combo, ILetters letters)
     {
         if (string.IsNullOrEmpty(word))
             throw new ArgumentException(nameof(word));
@@ -24,10 +24,13 @@ public class Score
         if (combo <= 0)
             throw new ArgumentOutOfRangeException(nameof(combo));
 
+        if (letters == null)
+            throw new ArgumentNullException(nameof(letters));
+
         int wordValue = 0;
 
         for (int i = 0; i < word.Length; i++)
-            wordValue += Letters.GetLetterValue(word[i]);
+            wordValue += letters.GetLetterValue(word[i]);
 
         wordValue *= word.Length * combo;
         return wordValue;
