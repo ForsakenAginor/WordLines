@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using Agava.YandexGames;
+using Lean.Localization;
 
 public class Root : MonoBehaviour
 {
@@ -112,6 +113,8 @@ public class Root : MonoBehaviour
         _records.Init(_nounRecordHolder, _nounViewPrefab);
 
         _advertiseShower = new(_silencer);
+
+        LeanLocalization.UpdateTranslations();
 
         _board.WordFound += OnWordFound;
         _timer.TimeEnded += OnTimeEnded;
