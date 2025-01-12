@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using Agava.YandexGames;
 using Lean.Localization;
+using System.Linq;
 
 public class Root : MonoBehaviour
 {
@@ -93,8 +94,21 @@ public class Root : MonoBehaviour
     {
         Time.timeScale = 0;
 
-        _letters = new EngLetters();
-        _rawNounsInfo = _engWords;
+        if (LeanLocalization.Instances.First().CurrentLanguage == "English")
+        {
+            _letters = new EngLetters();
+            _rawNounsInfo = _engWords;
+        }
+        else if (LeanLocalization.Instances.First().CurrentLanguage == "Russian")
+        {
+            _letters = new RusLetters();
+            _rawNounsInfo = _rusWords;
+        }
+        else
+        {
+            throw new Exception("Can't find current localization language");
+        }
+
         _nounDictionary = new NounDictionary(_rawNounsInfo);
 
         _board = _boardHolder.AddComponent(typeof(BoardManager)) as BoardManager;
