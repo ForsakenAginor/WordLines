@@ -3,14 +3,35 @@ using UnityEngine;
 
 public class ScoreRecordsManager
 {
-    private const string BestScoreKey = nameof(BestScoreKey);
-    private const string BestTodayScoreKey = nameof(BestTodayScoreKey);
-    private const string TodayKey = nameof(TodayKey);
+    private const string BestEnglishScoreKey = nameof(BestEnglishScoreKey);
+    private const string BestEnglishTodayScoreKey = nameof(BestEnglishTodayScoreKey);
+    private const string EnglishTodayKey = nameof(EnglishTodayKey);
+
+    private const string BestRussianScoreKey = nameof(BestRussianScoreKey);
+    private const string BestRussianTodayScoreKey = nameof(BestRussianTodayScoreKey);
+    private const string RussianTodayKey = nameof(RussianTodayKey);
+
+    private readonly string _bestScoreKey;
+    private readonly string _bestTodayScoreKey;
+    private readonly string _todayKey;
 
     private RecordsData _record;
 
-    public ScoreRecordsManager()
+    public ScoreRecordsManager(LocalizationLanguages languge)
     {
+        if(languge == LocalizationLanguages.English)
+        {
+            _bestScoreKey = BestEnglishScoreKey;
+            _bestTodayScoreKey = BestEnglishTodayScoreKey;
+            _todayKey = EnglishTodayKey;
+        }
+        else if(languge == LocalizationLanguages.Russian)
+        {
+            _bestScoreKey = BestRussianScoreKey;
+            _bestTodayScoreKey = BestRussianTodayScoreKey;
+            _todayKey = RussianTodayKey;
+        }
+
         _record = CreateRecord();
     }
 
@@ -26,16 +47,16 @@ public class ScoreRecordsManager
         SaveRecord();
     }
 
-    private RecordsData CreateRecord(int score = 0)
+    private RecordsData CreateRecord(int score = 0 )
     {
         int bestScore;
         int todayBestScore;
         int savedScore;
         string today = DateTime.Today.ToShortDateString();
 
-        if (PlayerPrefs.HasKey(BestScoreKey))
+        if (PlayerPrefs.HasKey(_bestScoreKey))
         {
-            savedScore = PlayerPrefs.GetInt(BestScoreKey);
+            savedScore = PlayerPrefs.GetInt(_bestScoreKey);
 
             if (savedScore < score)
             {
@@ -53,9 +74,9 @@ public class ScoreRecordsManager
             bestScore = score;
         }
 
-        if (PlayerPrefs.HasKey(TodayKey) && PlayerPrefs.GetString(TodayKey) == today)
+        if (PlayerPrefs.HasKey(_todayKey) && PlayerPrefs.GetString(_todayKey) == today)
         {
-            savedScore = PlayerPrefs.GetInt(BestTodayScoreKey);
+            savedScore = PlayerPrefs.GetInt(_bestTodayScoreKey);
 
             if (savedScore < score)
             {
@@ -78,9 +99,9 @@ public class ScoreRecordsManager
 
     private void SaveRecord()
     {
-        PlayerPrefs.SetString(TodayKey, _record.Today);
-        PlayerPrefs.SetInt(BestScoreKey, _record.BestScore);
-        PlayerPrefs.SetInt(BestTodayScoreKey, _record.TodayBestScore);
+        PlayerPrefs.SetString(_todayKey, _record.Today);
+        PlayerPrefs.SetInt(_bestScoreKey, _record.BestScore);
+        PlayerPrefs.SetInt(_bestTodayScoreKey, _record.TodayBestScore);
     }
 
     private class RecordsData
@@ -109,4 +130,10 @@ public class ScoreRecordsManager
         public int TodayBestScore => _todayBestScore;
         public string Today => _today;
     }
+}
+
+public enum LocalizationLanguages
+{
+    Russian,
+    English,
 }

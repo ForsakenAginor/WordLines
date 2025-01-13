@@ -94,15 +94,20 @@ public class Root : MonoBehaviour
     {
         Time.timeScale = 0;
 
-        if (LeanLocalization.Instances.First().CurrentLanguage == "English")
+        string languageString = LeanLocalization.Instances.First().CurrentLanguage;
+        LocalizationLanguages language;
+
+        if (languageString == "English")
         {
             _letters = new EngLetters();
             _rawNounsInfo = _engWords;
+            language = LocalizationLanguages.English;
         }
-        else if (LeanLocalization.Instances.First().CurrentLanguage == "Russian")
+        else if (languageString == "Russian")
         {
             _letters = new RusLetters();
             _rawNounsInfo = _rusWords;
+            language = LocalizationLanguages.Russian;
         }
         else
         {
@@ -117,7 +122,7 @@ public class Root : MonoBehaviour
         _score = new();
         _scoreView.Init(_score);
 
-        _recordsManager = new ScoreRecordsManager();
+        _recordsManager = new ScoreRecordsManager(language);
         _leaderboardOpener.Init(_recordsManager);
 
         _scoreRecordView.Init(_recordsManager);
