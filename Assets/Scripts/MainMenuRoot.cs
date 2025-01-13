@@ -17,6 +17,12 @@ public class MainMenuRoot : MonoBehaviour
     {
         _localization = new LocalizationInitializer();
 
+        /*
+        #if UNITY_WEBGL && !UNITY_EDITOR
+            YandexGamesSdk.GameReady();
+        #endif
+        */
+
         _toEnglish.onClick.AddListener(OnEnglishLanguageButtonClick);
         _toRussian.onClick.AddListener(OnRussianLanguageButtonClick);
         _startGame.onClick.AddListener(OnStartGameButtonClick);

@@ -1,5 +1,4 @@
-﻿using Agava.WebUtility;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,7 +18,7 @@ public class NounRecordView : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         float middleHeight;
         float widthFactor = 1500f;
 
-        if (Device.IsMobile == false)
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
             middleHeight = (Screen.height / half) * 0.7f;
         else
             middleHeight = (Screen.width / half) * 0.7f;

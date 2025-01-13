@@ -3171,10 +3171,6 @@ GameObject:
   - component: {fileID: 867965011}
   - component: {fileID: 867965014}
   - component: {fileID: 867965016}
-  - component: {fileID: 867965020}
-  - component: {fileID: 867965019}
-  - component: {fileID: 867965018}
-  - component: {fileID: 867965021}
   m_Layer: 0
   m_Name: Logic
   m_TagString: Untagged
@@ -3205,13 +3201,11 @@ MonoBehaviour:
   _raycaster: {fileID: 651707458}
   _endGameScreen: {fileID: 1729202873}
   _tutorial: {fileID: 1515127215}
-  _leaderboardOpener: {fileID: 867965020}
   _buttonsPanel: {fileID: 1355925291}
   _startPanel: {fileID: 1078138414}
   _loadingPanel: {fileID: 910065158}
   _audioSource: {fileID: 1663253738}
   _musicChoser: {fileID: 1114240758}
-  _silencer: {fileID: 867965021}
 --- !u!4 &867965012
 Transform:
   m_ObjectHideFlags: 0
@@ -3287,62 +3281,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bestScoreField: {fileID: 495714032}
   _bestOfDayScoreField: {fileID: 956856388}
---- !u!114 &867965018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867965010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ddbd3a3284359049b517c542544a924, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _holder: {fileID: 9138134382909978609}
-  _prefab: {fileID: 589885767701584684, guid: a28d8b73589ad664da502c87b2367d59, type: 3}
---- !u!114 &867965019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867965010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0feda662910e044989be96255ec62e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _leaderboardView: {fileID: 867965018}
---- !u!114 &867965020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867965010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1ad473ff9539b546bb80ef23fa7132f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _leaderboard: {fileID: 867965019}
-  _leaderboardPanel: {fileID: 8965451338150675109}
-  _openLeaderboardButton: {fileID: 703348862}
-  _holderPanel: {fileID: 1355925291}
-  _autorizationPanel: {fileID: 8315610604595634920}
---- !u!114 &867965021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867965010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84f6d4483074cb646b7b1b867cf1cdeb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &900095099
 GameObject:
   m_ObjectHideFlags: 0
@@ -5353,8 +5291,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -32, y: 0}
-  m_SizeDelta: {x: 128, y: 128}
+  m_AnchoredPosition: {x: -32, y: -32}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1234849835
 MonoBehaviour:
@@ -5441,14 +5379,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7c7dfffdf4b35dd409f8f2fc36268f42, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 83058a431cf615d4ca704e102d675e78, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5740,11 +5678,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041A\u0430\u0436\u0434\u0430\u044F \u0431\u0443\u043A\u0432\u0430 \u0432
-    \u0441\u043B\u043E\u0432\u0435 \u0434\u0430\u0435\u0442 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0435
-    \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0447\u043A\u043E\u0432,
-    \u0437\u0430\u0432\u0438\u0441\u044F\u0449\u0435\u0435 \u043E\u0442 \u0443\u043F\u043E\u0442\u0440\u0435\u0431\u043B\u044F\u0435\u043C\u043E\u0441\u0442\u0438
-    \u0435\u0435 \u0432 \u044F\u0437\u044B\u043A\u0435"
+  m_text: Error
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
   m_sharedMaterial: {fileID: 942589445191879500, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
@@ -5894,9 +5828,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041C\u0435\u043D\u044F\u0439\u0442\u0435 \u0431\u0443\u043A\u0432\u044B
-    \u043C\u0435\u0441\u0442\u0430\u043C\u0438, \u0441\u043E\u0441\u0442\u0430\u0432\u043B\u044F\u044F
-    \u0438\u0437 \u043D\u0438\u0445 \u0441\u043B\u043E\u0432\u0430"
+  m_text: Error
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
   m_sharedMaterial: {fileID: 942589445191879500, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
@@ -7798,15 +7730,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0.8, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 22b81694df4cdeb43939f2c4b0c29dbe, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: fdbbbe79ec08e3d449eaf6b98ec3f36a, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7814,7 +7746,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 50
 --- !u!222 &1515127218
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8415,10 +8347,10 @@ RectTransform:
   m_Father: {fileID: 1234849834}
   m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.2, y: 0.2}
+  m_AnchorMax: {x: 0.8, y: 0.8}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1614861470
 MonoBehaviour:
@@ -8433,14 +8365,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  m_Color: {r: 0.972549, g: 0.79607844, b: 0.64705884, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1b68e1b065767394db5b75ed3e211396, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 254c45d96083e8c48ba1fbfcd736cf33, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9652,14 +9584,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.972549, g: 0.79607844, b: 0.64705884, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5f4e6ae4611ff2f47a0363fe4150e45a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f0969b5d1c0da58488a3b1b4d9c49d27, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9668,7 +9600,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 5
+  m_PixelsPerUnitMultiplier: 50
 --- !u!222 &1847053623
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10564,9 +10496,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041C\u0435\u043D\u044F\u0439\u0442\u0435 \u0431\u0443\u043A\u0432\u044B
-    \u043C\u0435\u0441\u0442\u0430\u043C\u0438, \u0441\u043E\u0441\u0442\u0430\u0432\u043B\u044F\u044F
-    \u0438\u0437 \u043D\u0438\u0445 \u0441\u043B\u043E\u0432\u0430"
+  m_text: Error
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
   m_sharedMaterial: {fileID: 942589445191879500, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
@@ -14087,8 +14017,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9276039edbb51de4f916f7bd60af51cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _leaderboardOpener: {fileID: 867965020}
+  _leaderboardOpener: {fileID: 0}
   _holderPanel: {fileID: 8315610604595634920}
+  _button: {fileID: 0}
 --- !u!114 &8145595111431432452
 MonoBehaviour:
   m_ObjectHideFlags: 0

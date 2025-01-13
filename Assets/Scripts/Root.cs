@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using Agava.YandexGames;
 using Lean.Localization;
 using System.Linq;
 
@@ -34,7 +33,6 @@ public class Root : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Canvas _endGameScreen;
     [SerializeField] private GameObject _tutorial;
-    [SerializeField] private LeaderboardOpener _leaderboardOpener;
     [SerializeField] private GameObject _buttonsPanel;
     [SerializeField] private GameObject _startPanel;
     [SerializeField] private GameObject _loadingPanel;
@@ -43,8 +41,6 @@ public class Root : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private RandomMusicChoser _musicChoser;
 
-    [Header("")]
-    [SerializeField] private Silencer _silencer;
 
     private readonly string _rusFilePath = Path.Combine(Application.streamingAssetsPath, FileRusName);
     private readonly string _engFilePath = Path.Combine(Application.streamingAssetsPath, FileEngName);
@@ -56,12 +52,14 @@ public class Root : MonoBehaviour
     private ScoreEffectPool _effectCreator;
     private ScoreRecordsManager _recordsManager;
     private NounsList _records;
-    private AdvertiseShower _advertiseShower;
     private string _rusWords;
     private string _engWords;
 
     private IEnumerator Start()
     {
+        _loadingPanel.SetActive(true);
+        LeanLocalization.UpdateTranslations();
+
         using UnityWebRequest loadingRequest = UnityWebRequest.Get(_rusFilePath);
         yield return loadingRequest.SendWebRequest();
 
@@ -77,16 +75,12 @@ public class Root : MonoBehaviour
             Debug.LogErrorFormat(this, "Unable to load text due to {0} - {1}", secondLoadingRequest.responseCode, secondLoadingRequest.error);
         else
             _engWords = System.Text.Encoding.UTF8.GetString(secondLoadingRequest.downloadHandler.data);
-
+        /*
 #if UNITY_WEBGL && !UNITY_EDITOR
         StickyAd.Show();
 #endif
+        */
         Init();
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        YandexGamesSdk.GameReady();
-#endif
-
         ShowTutorial();
     }
 
@@ -123,17 +117,14 @@ public class Root : MonoBehaviour
         _scoreView.Init(_score);
 
         _recordsManager = new ScoreRecordsManager(language);
-        _leaderboardOpener.Init(_recordsManager);
 
         _scoreRecordView.Init(_recordsManager);
         _effectCreator = _boardHolder.AddComponent<ScoreEffectPool>();
-        _effectCreator.Init(_scoreEffectPrefab);
+        _effectCreator.Init(_scoreEffectPrefab, language);
         _records = transform.AddComponent<NounsList>();
         _records.Init(_nounRecordHolder, _nounViewPrefab);
 
-        _advertiseShower = new(_silencer);
-
-        LeanLocalization.UpdateTranslations();
+        _loadingPanel.SetActive(false);
 
         _board.WordFound += OnWordFound;
         _timer.TimeEnded += OnTimeEnded;
@@ -168,7 +159,10 @@ public class Root : MonoBehaviour
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
         _loadingPanel.SetActive(true);
+
+        /*
         _advertiseShower.ShowAdvertise(ResetProgress);
+        */
 #endif
 
 #if UNITY_EDITOR

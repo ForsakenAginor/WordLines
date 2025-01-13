@@ -5,11 +5,15 @@ using UnityEngine;
 
 public class ScoreEffect : MonoBehaviour
 {
+    private const string RusCombo = "КОМБО";
+    private const string EngCombo = "Combo";
+
     [SerializeField] private TMP_Text _score;
 
     private readonly Vector3 _standardScale = Vector3.one;
     private readonly Vector3 _targetScale = Vector3.one * 3f;
     private readonly float _duration = 4f;
+    private string _combo;
     private Canvas _canvas;
     private Transform _parent;
 
@@ -35,8 +39,9 @@ public class ScoreEffect : MonoBehaviour
         transform.SetParent(_parent);
     }
 
-    public void Init(int score, Vector3 position, int combo)
+    public void Init(int score, Vector3 position, int combo, LocalizationLanguages language)
     {
+        _combo = language == LocalizationLanguages.English ? EngCombo : RusCombo;
         CreateEffectMessage(score, combo);
         _score.transform.localPosition = position;
         transform.SetParent(_canvas.transform);
@@ -63,12 +68,12 @@ public class ScoreEffect : MonoBehaviour
         else if(comboColorPairs.ContainsKey(combo))
         {
             _score.color = comboColorPairs[combo];
-            _score.text = $"+{score}\nx{combo} КОМБО";
+            _score.text = $"+{score}\nx{combo} {_combo}";
         }
         else
         {
             _score.color = comboColorPairs[MaxComboStatus];
-            _score.text = $"+{score}\nx{combo} КОМБО";
+            _score.text = $"+{score}\nx{combo} {_combo}";
         }
     }
 }
