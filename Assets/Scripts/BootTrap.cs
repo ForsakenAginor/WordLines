@@ -1,11 +1,12 @@
 using Agava.YandexGames;
+using Localization;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class BootTrap : MonoBehaviour
 {
-    private const string MainSceneName = "MainScene";
+    private const string MenuSceneName = "MenuScene";
 
     private void Awake()
     {
@@ -21,6 +22,10 @@ public class BootTrap : MonoBehaviour
 #elif UNITY_EDITOR
         yield return null;
 #endif
-        SceneManager.LoadScene(MainSceneName);
+
+        LocalizationInitializer localization = new LocalizationInitializer();
+        localization.ApplyLocalization("en");
+
+        SceneManager.LoadScene(MenuSceneName);
     }
 }

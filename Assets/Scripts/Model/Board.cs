@@ -8,9 +8,9 @@ public class Board
 {
     private readonly List<Cell> _cells = new();
     private readonly MatchFinder _matchFinder;
-    private readonly Letters _letters;
+    private readonly ILetters _letters;
 
-    public Board(Letters letters, MatchFinder matchfinder)
+    public Board(ILetters letters, MatchFinder matchfinder)
     {
         _matchFinder = matchfinder ?? throw new ArgumentNullException(nameof(matchfinder));
         _letters = letters ?? throw new ArgumentNullException(nameof(letters));

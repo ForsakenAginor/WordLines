@@ -26,10 +26,9 @@ public class CellView : MonoBehaviour
         _image = GetComponent<Image>();           
     }
 
-    public void Init(char letter)
+    public void Init(char letter, int weight)
     {
         _letter.text = letter.ToString();
-        int weight = Letters.GetLetterValue(letter);
         
         if(_colors.ContainsKey(weight))
             _image.color = _colors[weight];

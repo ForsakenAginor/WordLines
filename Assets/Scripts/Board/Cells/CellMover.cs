@@ -19,11 +19,11 @@ public class CellMover : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
     public Vector2 CellPosition => _cellPosition;
 
-    public void Init(Cell cell, Transform parent)
+    public void Init(Cell cell, int weight, Transform parent)
     {
         _draggingCanvas = GetComponentInParent<Canvas>().transform;
         CellView view = GetComponent<CellView>();
-        view.Init(cell.Content);
+        view.Init(cell.Content, weight);
         SetParent(parent);
         transform.localPosition = new Vector3(LeftBorder + cell.XPosition * CellConfig.CellSize, (TopBorder + TopBorder) - cell.YPosition * CellConfig.CellSize);
         _tweener = transform.DOLocalMove(transform.position, 0).SetEase(Ease.Linear).SetAutoKill(false);

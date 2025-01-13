@@ -10,12 +10,13 @@ public class BoardManager : MonoBehaviour
     private List<CellMover> _cells;
     private Board _board;
     private int _comboMultiplier = 1;
+    private ILetters _letters;
 
     public event Action<string, int, Vector3> WordFound;
     public event Action ChainScanStarted;
     public event Action ChainScanFinished;
 
-    public void Init(Letters letters, NounDictionary nouns, CellMover cellPrefab)
+    public void Init(ILetters letters, NounDictionary nouns, CellMover cellPrefab)
     {
         if (letters == null)
             throw new ArgumentNullException(nameof(letters));
@@ -30,11 +31,12 @@ public class BoardManager : MonoBehaviour
         _cellPrefab = cellPrefab;
         MatchFinder finder = new(nouns);
         _board = new Board(letters, finder);
+        _letters = letters;
 
         foreach (var cell in _board.Cells)
         {
             CellMover cellMover = Instantiate(_cellPrefab, transform);
-            cellMover.Init(cell, transform);
+            cellMover.Init(cell, _letters.GetLetterValue(cell.Content), transform);
             _cells.Add(cellMover);
             cellMover.CellsSwapped += OnCellsSwapped;
         }
@@ -46,7 +48,7 @@ public class BoardManager : MonoBehaviour
             _cells[i].CellsSwapped -= OnCellsSwapped;
     }
 
-    public void ResetBoard(Letters letters, NounDictionary nouns)
+    public void ResetBoard(ILetters letters, NounDictionary nouns)
     {
         if (letters == null)
             throw new ArgumentNullException(nameof(letters));
@@ -61,7 +63,7 @@ public class BoardManager : MonoBehaviour
         _board = new Board(letters, finder);
 
         for (int i = 0; i < _cells.Count; i++)
-            _cells[i].Init(_board.Cells.ToList()[i], transform);
+            _cells[i].Init(_board.Cells.ToList()[i], _letters.GetLetterValue(_board.Cells.ToList()[i].Content), transform);
     }
 
     private void OnCellsSwapped(Vector2 first, Vector2 second)
@@ -140,6 +142,6 @@ public class BoardManager : MonoBehaviour
         UpdateAffectedCells(cells);
 
         for (int i = 0; i < cellsForDeleting.Count(); i++)
-            cellsForDeleting[i].Init(newCells[i], transform);
+            cellsForDeleting[i].Init(newCells[i], _letters.GetLetterValue(newCells[i].Content), transform);
     }
 }
