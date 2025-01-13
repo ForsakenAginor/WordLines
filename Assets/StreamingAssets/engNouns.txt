@@ -261,7 +261,6 @@ AILING: somewhat ill or prone to illness
 AIM: 1. propose or intend. 2. the action of directing something at an object. 3. point or cause to go (blows, weapons, or objects such as photographic equipment) towards. 4. direct (a remark) toward an intended goal. 
 AIOLI: garlic mayonnaise
 AIR: 1. a mixture of gases (especially oxygen) required for breathing; the stuff that the wind consists of. 2. be broadcast. 3. broadcast over the airwaves, as in radio or television. 4. once thought to be one of four elements composing the universe (Empedocles). 5. medium for radio and television broadcasting. 6. expose to warm or heated air, so as to dry. 
-AYR: a port in southwestern Scotland
 AIRBUS: a subsonic jet airliner operated over short distances
 AIRE: a river in northern England that flows southeast through West Yorkshire
 AIRED: open to or abounding in fresh air
@@ -7073,21 +7072,16 @@ MOLTO: much
 MOMBIN: 1. common tropical American shrub or small tree with purplish fruit. 2. purplish tropical fruit. 
 MOMENT: 1. a particular point in time. 2. an indefinitely short time. 3. a turning force produced by an object acting at a distance (or a measure of that force). 4. the n-th moment of a distribution is the expected value of the n-th power of the deviations from a fixed value. 
 MOMISM: excessive protection
-MOMUS: god of blame and mockery
-MON: 1. a member of a Buddhist people living in Myanmar and adjacent parts of Thailand. 2. the Mon-Khmer language spoken by the Mon. 
 MONACO: a constitutional monarchy in a tiny enclave on the French Riviera
 MONAD: 1. (chemistry) an atom having a valence of one. 2. a singular metaphysical entity from which material properties are said to derive. 3. (biology) a single-celled microorganism (especially a flagellate protozoan). 
 MONAL: brilliantly colored pheasant of southern Asia
 MONDAY: the second day of the week; the first working day
 MONEY: 1. the most common medium of exchange; functions as legal tender. 2. wealth reckoned in terms of money. 3. the official currency issued by a government or national bank. 
 MONERA: prokaryotic bacteria and blue-green algae and various primitive pathogens; because of lack of consensus on how to divide the organisms into phyla informal names are used for the major divisions
-MONET: French impressionist painter (1840-1926)
-MONGO: 100 mongo equal 1 tugrik in Mongolia
 MONGOL: of or relating to the region of Mongolia or its people or their languages or cultures
 MONISM: the doctrine that reality consists of a single basic substance or element
 MONK: 1. a male religious living in a cloister and devoting himself to contemplation and prayer and work. 2. United States jazz pianist who was one of the founders of the bebop style (1917-1982). 
 MONKEY: any of various long-tailed primates (excluding the prosimians)
-MONNET: French economist who advocated a Common Market in Europe (1888-1979)
 MONO: designating sound transmission or recording or reproduction over a single channel
 MONS: a mound of fatty tissue covering the pubic area in women
 MONTE: a gambling card game of Spanish origin; 3 or 4 cards are dealt face up and players bet that one of them will be matched before the others as the cards are dealt from the pack one at a time
@@ -7241,7 +7235,6 @@ MUSLIN: plain-woven cotton fabric
 MUSNUD: a seat with a cushion that is used as a throne by Indian princes
 MUSS: make messy or untidy
 MUSSEL: 1. black marine bivalves usually steamed in wine. 2. marine or freshwater bivalve mollusk that lives attached to rocks etc.. 
-MUSSET: French poet and writer (1810-1857)
 MUST: 1. highly recommended. 2. grape juice before or during fermentation. 
 MUSTER: 1. gather or bring together. 2. call to duty, military service, jury duty, etc.. 
 MUSTH: an annual phase of heightened sexual excitement in the males of certain large mammals (especially elephants); is associated with discharge from a gland between the eye and ear
@@ -10815,7 +10808,6 @@ TAPPER: 1. a person who strikes a surface lightly and usually repeatedly. 2. a w
 TAPPET: a lever that is moved in order to tap something else
 TAPS: (military) signal to turn the lights out
 TAR: coat with tar
-TARA: a village in eastern Ireland (northwest of Dublin); seat of Irish kings until 6th century
 TARAWA: 1. national capital of Kiribati. 2. battles in World War II in the Pacific (November 1943); United States Marines took the islands from the Japanese after bitter fighting. 
 TARE: 1. an adjustment made for the weight of the packaging in order to determine the net weight of the goods. 2. any of several weedy vetches grown for forage. 3. the weight of a motor vehicle, railroad car, or aircraft without its fuel or cargo. 4. (chemical analysis) a counterweight used in chemical analysis; consists of an empty container that counterbalances the weight of the container holding chemicals. 
 TARGET: 1. intend (something) to move towards a certain goal. 2. the location of the target that is to be hit. 3. sports equipment consisting of an object set up for a marksman or archer to aim at. 
