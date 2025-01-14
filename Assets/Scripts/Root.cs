@@ -159,10 +159,15 @@ public class Root : MonoBehaviour
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
         _loadingPanel.SetActive(true);
-
+        ResetProgress();
+        Time.timeScale = 1f;
         /*
         _advertiseShower.ShowAdvertise(ResetProgress);
         */
+#elif !UNITY_EDITOR && UNITY_STANDALONE
+        _loadingPanel.SetActive(true);
+        ResetProgress();
+        Time.timeScale = 1f;
 #endif
 
 #if UNITY_EDITOR

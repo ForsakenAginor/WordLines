@@ -23,6 +23,8 @@ public class BootTrap : MonoBehaviour
         yield return null;
 #elif UNITY_EDITOR
         yield return null;
+#elif !UNITY_EDITOR && UNITY_STANDALONE
+        yield return null;
 #endif
 
         LocalizationInitializer localization = new LocalizationInitializer();
